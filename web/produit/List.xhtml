@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListProduitTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <p:button id="createButton" icon="ui-icon-plus"   
+                                  value="Nouveau produit" 
+                                  outcome="Create.xhtml"
+                                  style="
+                                  margin-left: 75%;
+                                  margin-top: 20%"
+                                  rendered="#{utilisateurController.getConnectedUser().gererCatalogue == true}"
+                                  />
+                        <h:form id="ProduitListForm">
+                            <p:fieldset id="availableClientsField" legend="Liste des produits" style="margin-left: 5%;margin-top: 2%; width: 90%" >
+                                <form><p:panelGrid columns="2">
+
+                                        <h:outputText value="Recherche: " />
+                                        <p:inputText id="critere" value="#{produitController.recherche}">
+                                            <p:ajax event="keyup" update=":ProduitListForm:datalist" listener ="#{produitController.rechercheByCritere()}" />
+                                        </p:inputText>
+
+
+                                    </p:panelGrid>
+                               
+                                </form>
+                                <p:dataTable id="datalist" value="#{produitController.list}" var="item"
+                                            
+                                             paginator="true"
+                                             rowKey="#{item.reference}"
+                                             rows="10"
+                                             rowsPerPageTemplate="10,20,30,40,50"
+
+                                             >
+
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProduitTitle_reference}"/>
+                                        </f:facet>
+                                        <h:outputText style="color:orange; font-weight: bold" value="#{item.reference}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProduitTitle_fournisseur}"/>
+                                        </f:facet>
+                                        <h:outputText style="width:500px;color:brown; font-weight: bold" value="#{item.fournisseur.nom}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProduitTitle_libelle}"/>
+                                        </f:facet>
+                                        <h:outputText style="color:green; font-weight: bold" value="#{item.libelle}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProduitTitle_description}"/>
+                                        </f:facet>
+                                        <h:outputText style="color:black; font-weight: bold" value="#{item.description}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center; ">
+                                        <f:facet name="header">
+                                            <h:outputText value="Prix en DH"/>
+                                        </f:facet>
+                                        <h:outputText style="color:#1eb3c0; font-weight: bold;font-size: 13px" value="#{produitController.prixProduit(item.prixDirham)}"/>
+                                    </p:column>
+                                    <p:column  style="text-align: center; ">
+                                        <f:facet name="header">
+                                            <h:outputText value="Prix en $"/>
+                                        </f:facet>
+                                        <h:outputText style="color:#1eb3c0; font-weight: bold;font-size: 13px" value="#{produitController.prixProduit(item.prixDollar)}"/>
+                                    </p:column>
+                                    <p:column  style="text-align: center; ">
+                                        <f:facet name="header">
+                                            <h:outputText value="Prix en €"/>
+                                        </f:facet>
+                                        <h:outputText style="color:#1eb3c0; font-weight: bold;font-size: 13px" value="#{produitController.prixProduit(item.prixEuro)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Quantité du stock"/>
+                                        </f:facet>
+                                        <div id = "qte" style="background-color: #{produitController.getColorStock(item.quantiteStock)};padding: 4px;width: max-content;border-radius: 4px"><h:outputText value="#{item.quantiteStock}" /></div>
+                                    </p:column>
+                                    
+                                     <p:column style="width:300px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Actions"/>
+                                        </f:facet>
+                                        <p:commandButton styleClass="butonPay" id="viewButton2"  process="datalist"  icon="ui-icon-search" value="#{bundle.View}" update=":ProduitViewForm" oncomplete="PF('ProduitViewDialog').show()" >
+                                            <f:setPropertyActionListener value="#{item}" target="#{produitController.selected}" />
+                                        </p:commandButton>
+
+
+
+                                        <p:commandButton styleClass="butonMod" id="editButton2" process="datalist"  rendered="#{utilisateurController.getConnectedUser().gererCatalogue == true}" icon="ui-icon-pencil" value="#{bundle.Edit}" actionListener="#{produitController.edite()}"   >
+                                            <f:setPropertyActionListener value="#{item}" target="#{produitController.selected}" />
+                                        </p:commandButton>
+                                         <p:commandButton styleClass="butonAp" id="deleteButton2" process="datalist"   rendered="#{utilisateurController.getConnectedUser().gererCatalogue == true}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{produitController.destroy()}" update=":growl,datalist" >
+                                            <f:setPropertyActionListener value="#{item}" target="#{produitController.selected}" />
+                                        </p:commandButton>
+
+
+
+                                        
+
+
+                                       
+
+                                       
+                                    </p:column>
+
+                                    <f:facet name="footer">
+                                    </f:facet>
+                                </p:dataTable>
+                            </p:fieldset>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+           
+
+
+                        <ui:include src="View.xhtml"/>
+                        </ui:define>
+                        </ui:composition>
+
+                        </html>

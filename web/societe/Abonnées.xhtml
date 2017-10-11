@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListSocieteTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body" >
+
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+
+                        <h:form id="CritereForm">
+                            <p:fieldset id="Recherche" legend="Filtre" toggleable="true" style="margin-left: 10%; height: 20%; width: 80%; margin-top: 1%" >
+                                <h:panelGrid columns="4" cellpadding="10">
+                                    <p:panelGrid columns="2">
+                                        <h:outputText value="Recherche: " />
+
+                                        <p:inputText id="critere" value="#{societeController.recherche}">
+                                            <p:ajax event="keyup" listener="#{societeController.findSocieteByCritere()}"  update=":SocieteListForm:datalist"/>
+                                        </p:inputText>
+
+
+                                    </p:panelGrid>  
+                                    <p:selectOneRadio id="check" value="#{societeController.etat}" style="margin-left: 20%; width: 100%" styleClass=".ui-selectoneradio">
+                                        <f:selectItem itemLabel="  Toutes les abonnées   " itemValue="tout"/>
+                                        <f:selectItem itemLabel="   Abonnées active   " itemValue="active" />
+                                        <f:selectItem itemLabel="  Abonnées hors service   " itemValue="horsService" />
+
+                                        <p:ajax event="change" listener="#{societeController.findSocieteByEtat()}" update=":SocieteListForm:datalist"/>
+                                    </p:selectOneRadio>
+
+
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <h:form id="SocieteListForm" style="margin-top: 2%">
+                            <p:panel header="Liste des abonnées" style="width: 95%; margin-left: 2%;" >
+
+                                    <p:dataTable id="datalist" value="#{societeController.allSociete}" var="item"
+                                                 selection="#{societeController.selected}"
+                                                 selectionMode="single"
+                                                 paginator="true"
+                                                 rowKey="#{item.id}"
+                                                 rows="10"
+                                                 rowsPerPageTemplate="10,20,30,40,50"
+                                                 >
+
+                                        <p:ajax event="rowSelect"   update="  droitButton viewButton"/>
+                                        <p:ajax event="rowUnselect" update="  droitButton viewButton"/>
+
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Raison sociale"/>
+                                            </f:facet>
+                                            <h:outputText style="color:orange; font-weight: bold" value="#{item.raisonSociale}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Secteur d'activité"/>
+                                            </f:facet>
+                                            <h:outputText style="width:500px;color:#abaa01; font-weight: bold" value="#{item.secteurActivite}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Activité principale"/>
+                                            </f:facet>
+                                            <h:outputText style="color:#629862; font-weight: bold" value="#{item.activitePrincipale}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Forme juridique"/>
+                                            </f:facet>
+                                            <h:outputText style="color:brown; font-weight: bold" value="#{item.statutJuridique}"/>
+                                        </p:column>
+                                        <p:column style="width: 200px">
+                                            <f:facet name="header">
+                                                <h:outputText value="Adresse"/>
+                                            </f:facet>
+                                            <h:outputText style="color:#428bca; font-weight: bold" value="#{item.adresse}"/>
+                                        </p:column>
+
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Email"/>
+                                            </f:facet>
+                                            <h:outputText style="color:#846d74; font-weight: bold" value="#{item.email}"/>
+                                        </p:column>
+
+
+
+
+
+
+
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Droit d'utilisation"/>
+                                            </f:facet>
+                                            <p:selectBooleanCheckbox value="#{item.droitExploitation}" disabled="true"/>
+                                        </p:column>
+
+
+
+                                        <f:facet name="footer">
+                                            <p:commandButton styleClass="butonAp" id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":SocieteViewForm" oncomplete="PF('SocieteViewDialog').show()" disabled="#{empty societeController.selected}" >
+                                            </p:commandButton>
+
+                                            <p:commandButton styleClass="butonMod" id="droitButton"   icon="ui-icon-search" value="Changer droit"  actionListener="#{societeController.popupa}"  update=":growl,:SocieteListForm:datalist" >
+
+
+                                            </p:commandButton>
+                                        </f:facet>
+                                    </p:dataTable>
+                            </p:panel>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+
+            <ui:include src="View.xhtml"/>
+
+        </ui:define>
+    </ui:composition>
+
+</html>

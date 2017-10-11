@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="FournisseurCreateDlg" widgetVar="FournisseurCreateDialog" width="40%" modal="true" resizable="false" appendTo="@(body)" header="Nouveau fournisseur">
+            <h:form id="FournisseurCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{fournisseurController.selected != null}" style="width: 80%;margin: auto">
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_nom}" for="nom" />
+                        <p:inputText style="width: 70%" id="nom" value="#{fournisseurController.selected.nom}" title="#{bundle.CreateFournisseurTitle_nom}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_adresse}" for="adresse" />
+                        <p:inputText style="width: 70%" id="adresse" value="#{fournisseurController.selected.adresse}" title="#{bundle.CreateFournisseurTitle_adresse}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_codePostale}" for="codePostale" />
+                        <p:inputText style="width: 70%" id="codePostale" value="#{fournisseurController.selected.codePostale}" title="#{bundle.CreateFournisseurTitle_codePostale}" />
+
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_telephone}" for="telephone" />
+                        <p:inputText style="width: 70%" id="telephone" value="#{fournisseurController.selected.telephone}" title="#{bundle.CreateFournisseurTitle_telephone}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_portable}" for="portable" />
+                        <p:inputText style="width: 70%" id="portable" value="#{fournisseurController.selected.portable}" title="#{bundle.CreateFournisseurTitle_portable}" />
+
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_fax}" for="fax" />
+                        <p:inputText style="width: 70%" id="fax" value="#{fournisseurController.selected.fax}" title="#{bundle.CreateFournisseurTitle_fax}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_email}" for="email" />
+                        <p:inputText style="width: 70%" id="email" value="#{fournisseurController.selected.email}" title="#{bundle.CreateFournisseurTitle_email}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_siteweb}" for="siteweb" />
+                        <p:inputText style="width: 70%" id="siteweb" value="#{fournisseurController.selected.siteweb}" title="#{bundle.CreateFournisseurTitle_siteweb}" />
+
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_formeJuridique}" for="formeJuridique" />
+                        <p:selectOneMenu style="width: 200px" id="formeJuridique" value="#{fournisseurController.selected.formeJuridique}" >
+                            <f:selectItem id="form0" value="#{fournisseurController.formeNull}" itemLabel="   ----SELECT----" ></f:selectItem>                             
+
+                            <f:selectItems value="#{fournisseurController.listeForme}"
+                                           var="formeJuridiqueItem"
+                                           itemValue="#{formeJuridiqueItem}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_pays}" for="pays" />
+                        <p:selectOneMenu style="width: 200px" id="pays" value="#{fournisseurController.selected.pays}" >
+                            <f:selectItem id="pays0" value="#{fournisseurController.paysNull}" itemLabel="   ----SELECT----" ></f:selectItem> 
+                            <f:selectItems value="#{fournisseurController.listePays}"
+                                           var="paysItem"
+                                           itemValue="#{paysItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateFournisseurLabel_ville}" for="ville" />
+                        <p:inputText style="width: 70%" id="ville" value="#{fournisseurController.selected.ville}" title="#{bundle.CreateFournisseurTitle_ville}" />
+
+                    </p:panelGrid>
+                    <p:commandButton styleClass="butonAp" actionListener="#{fournisseurController.saveFournisseurPopup()}" value="#{bundle.Save}" update="display,:growl"/>
+                    <p:commandButton styleClass="butonPay" actionListener="#{fournisseurController.reinitialiser()}" value="#{bundle.ReinitaliserForm}" update="display,:growl"/>
+                    <p:commandButton styleClass="butonMod" value="Annuler" onclick="FournisseurCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

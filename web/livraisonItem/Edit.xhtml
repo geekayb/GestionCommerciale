@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="LivraisonItemEditDlg" widgetVar="LivraisonItemEditDialog" modal="true" resizable="false" appendTo="@(body)" header="Modifier l'article">
+            <h:form id="LivraisonItemEditForm">
+                <h:panelGroup id="display">
+                    <h4 style="display: none">#{livraisonController.livraisonItem = livraisonItemController.selected}</h4>
+                    <p:panelGrid columns="2" rendered="#{livraisonItemController.selected != null}">
+
+
+
+                        <p:outputLabel value="#{bundle.EditLivraisonItemLabel_produit}" for="produit" />
+                        <p:inputText  id="produit" disabled="true" value="#{livraisonController.livraisonItem.produit.libelle}" title="#{bundle.EditLivraisonItemTitle_quantite}" />
+                        <p:outputLabel value="Prix unitaire" for="quantite" />
+                        <p:inputText disabled="true" id="prix" value="#{livraisonController.livraisonItem.prixDevise}" title="#{bundle.CreateLivraisonItemTitle_tax}" />
+
+
+
+                        <p:outputLabel value="#{bundle.CreateLivraisonItemLabel_quantite}" for="quantite" />
+                        <p:inputText id="quantite" value="#{livraisonController.livraisonItem.quantite}" title="#{bundle.CreateLivraisonItemTitle_quantite}" >
+                            <p:ajax listener="#{livraisonController.calculerSousTotal}" event="keyup" update="sousTotalHT">
+
+
+                            </p:ajax></p:inputText>
+                        <p:outputLabel value="#{bundle.CreateLivraisonItemLabel_tax}" for="tax" />
+                        <p:selectOneMenu id="tax" value="#{livraisonItemController.selected.tax}" >
+                            <f:selectItem  itemValue="0" itemLabel="0%" />
+                            <f:selectItem  itemValue="7" itemLabel="7%" />
+                            <f:selectItem  itemValue="10" itemLabel="10%" />                                                                     
+                            <f:selectItem  itemValue="20" itemLabel="20%" />
+                            <f:selectItem  itemValue="14" itemLabel="14%" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="#{bundle.CreateLivraisonItemLabel_remise}" for="remise" />
+                        <p:inputText id="remise" value="#{livraisonController.livraisonItem.remise}" title="#{bundle.CreateLivraisonItemTitle_remise}" >
+                            <p:ajax listener="#{livraisonController.calculerSousTotal}" event="keyup" update="sousTotalHT"></p:ajax>
+                        </p:inputText>
+                        <p:outputLabel value="Sous total (HT)" for="sousTotalHT" />
+                        <p:inputText disabled="true" id="sousTotalHT" value="#{livraisonController.livraisonItem.sousTotalHT}" title="#{bundle.CreateLivraisonItemTitle_sousTotalHT}" />
+
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{livraisonController.modifierItem()}" value="#{bundle.Save}" update="display,:LivraisonItemListForm:datalist,:LivraisonItemListForm:datalist,:form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:montantDu,:growl" oncomplete="handleSubmit(args, 'LivraisonItemEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="LivraisonItemEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

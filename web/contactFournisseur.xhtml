@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFactureTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body" >
+
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <h:form id="ContactListForm" >
+                            
+                            <p:dataScroller value="#{fournisseurController.list}" style="width: 60% !important" var="item" chunkSize="10">
+                                    <f:facet name="header">
+                                        contact des fournisseurs
+                                    </f:facet>
+
+                                    <h:panelGrid columns="2" style="width:50%;" columnClasses="logo,detail">
+                                        <p:graphicImage value="fournisseur.jpg" width="150" height="150" style="margin-left: 2%;border: solid 1px gray;border-radius: 10px"/>
+
+                                        <p:outputPanel style="margin-left: 8%">
+                                             <h2 style="width: max-content; color: orange">#{item.nom}</h2>
+                                              
+                                                 
+                                                 
+                                            <h:panelGrid columns="4" cellpadding="5" style="width: 220%">
+                                               
+                                                    
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Adresse:" />
+                                                <h:outputText value="#{item.adresse}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 17px;color: #0d83b5" value="Forme juridique:" />
+                                                <h:outputText value="#{item.formeJuridique}" style="font-weight: bold"/>
+
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Télephone: " />
+                                                <h:outputText value="#{item.telephone}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Portable: " />
+                                                <h:outputText value="#{item.portable}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Email: " />
+                                                <h:outputText value="#{item.email}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Pays: " />
+                                                <h:outputText value="#{item.pays}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Ville:" />
+                                                <h:outputText value="#{item.ville}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Fax:" />
+                                                <h:outputText value="#{item.fax}" style="font-weight: bold"/>
+                                                <h:outputText style="font-size: 15px;color: #0d83b5" value="Site web:" />
+                                                <h:outputText value="#{item.siteweb}" style="font-weight: bold"/>
+                                               
+                                                <br></br>
+                                                <br></br>
+                                            </h:panelGrid>
+                                        </p:outputPanel>
+                                        
+                                    </h:panelGrid>
+                                 <hr></hr>
+                                </p:dataScroller>
+                            </h:form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </ui:define>
+    </ui:composition>
+
+</html>

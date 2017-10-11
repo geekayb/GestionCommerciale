@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title><ui:insert name="title">Default Title</ui:insert></title>
+        <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>
+    </h:head>
+    #{utilisateurController.isConnected()}
+    #{utilisateurController.profileSelected()}
+
+    <h:body>
+
+        <p:growl id="growl" life="4000" />
+
+        <p:layout fullPage="true" id="a">
+            <p:layoutUnit position="north" size="110" >
+
+                <h:form style="background-color: red; height: 100%; width: 100%" >
+
+                    <p:panel style= "font-size: 40px; color: red;height: 100%" >
+                        <p:graphicImage value="/logo.png" style="width: 20%;height: 7%"></p:graphicImage>
+
+                        <!--  <h:outputText value="Gestion commerciale" style="text-align: left"> </h:outputText> -->
+                        <h:outputText value="Bonjour #{utilisateurController.getConnectedUser().email}   " style="margin-left: 25%; font-size: 22px !important"/>
+                        <h:outputText value="#{utilisateurController.dateSysteme}" style="font-size: 22px !important"/>
+                        <p:commandButton style="margin-left: 2%; " value="deconnecter  " action="#{utilisateurController.deconnexion()}" icon="ui-icon-power"/>
+                        <p:commandButton style="" value="Compléter les informations" actionListener="#{societeController.edite()}" rendered="#{utilisateurController.infoComplete()==true}" />
+                    </p:panel>
+                </h:form>
+
+
+            </p:layoutUnit>
+            <p:layoutUnit rendered="#{utilisateurController.isRoot()}" position="west" size="250" style="margin-right: 5">
+
+                <h:form>
+
+
+                    <p:menu   style="width: 95%;margin-top: 4.1%">
+                        <p:menuitem value="Tableau de bord" outcome="/dashboard.xhtml" icon="ui-icon-home"/>
+                        <p:submenu label="Clients">
+                            <p:menuitem value="Liste"  icon="ui-icon-arrowrefresh-1-w" outcome="/client/List.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="Fournisseurs">
+                            <p:menuitem value="Liste"  icon="ui-icon-arrowrefresh-1-w" outcome="/fournisseur/List.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="Produits" >
+                            <p:menuitem value="Liste"  icon="ui-icon-arrowrefresh-1-w" outcome="/produit/List.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="Factures" >
+                            <p:menuitem value="Liste des factures"  icon="ui-icon-arrowrefresh-1-w" outcome="/facture/List.xhtml"/>
+                            <p:menuitem value="Factures en retard"  icon="ui-icon-arrowrefresh-1-w" outcome="/facture/Retard.xhtml"/>
+
+                        </p:submenu>
+                        <p:submenu label="Devis">
+                            <p:menuitem value="Liste"  icon="ui-icon-arrowrefresh-1-w" outcome="/devis/List.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="Bon de commande">
+                            <p:menuitem value="Liste"  icon="ui-icon-arrowrefresh-1-w" outcome="/commande/List.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="Bon de livraison" >
+                            <p:menuitem value="Liste"  icon="ui-icon-arrowrefresh-1-w" outcome="/livraison/List.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="Gestion des utilisateurs"  >
+                            <p:menuitem value="Liste des utilisateur"   icon="ui-icon-disk"  outcome="/utilisateur/List.xhtml" />
+
+                        </p:submenu>
+                        <p:submenu label="Paramètres" rendered="#{utilisateurController.getConnectedUser().gererParametre == true}" >
+
+                            <p:menuitem value="Informations société"   icon="ui-icon-disk"  outcome="/societe/Edit.xhtml" />
+
+                        </p:submenu>
+                        <p:submenu label="Rapports"  >
+
+
+                            <p:menuitem value="Rapport"   icon="ui-icon-disk"  outcome="/Rapport.xhtml" />
+
+                        </p:submenu>
+                    </p:menu>
+
+                    <!-- <p:menuitem value="upload"   icon="ui-icon-disk"  outcome="/testUpload.xhtml" />
+                                               <p:menuitem value="backoffice"   icon="ui-icon-disk"  outcome="/backoffice.xhtml" />
+                                               <p:menuitem value="Liste d'abonnées"   icon="ui-icon-disk"  outcome="/societe/Abonnées.xhtml" />
+                    -->
+
+
+
+
+                </h:form>
+
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" size="40" >
+
+                <ui:insert name="footer"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" style="background-color: white" >
+                <ui:insert name="body" />
+            </p:layoutUnit>
+
+        </p:layout>
+
+    </h:body>
+
+</html>

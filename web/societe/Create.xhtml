@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="SocieteCreateDlg" widgetVar="SocieteCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateSocieteTitle}">
+            <h:form id="SocieteCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{societeController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{societeController.selected.id}" title="#{bundle.CreateSocieteTitle_id}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_raisonSociale}" for="raisonSociale" />
+                        <p:inputText id="raisonSociale" value="#{societeController.selected.raisonSociale}" title="#{bundle.CreateSocieteTitle_raisonSociale}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_secteurActivite}" for="secteurActivite" />
+                        <p:inputText id="secteurActivite" value="#{societeController.selected.secteurActivite}" title="#{bundle.CreateSocieteTitle_secteurActivite}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_activitePrincipale}" for="activitePrincipale" />
+                        <p:inputText id="activitePrincipale" value="#{societeController.selected.activitePrincipale}" title="#{bundle.CreateSocieteTitle_activitePrincipale}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_statutJuridique}" for="statutJuridique" />
+                        <p:inputText id="statutJuridique" value="#{societeController.selected.statutJuridique}" title="#{bundle.CreateSocieteTitle_statutJuridique}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_adresse}" for="adresse" />
+                        <p:inputText id="adresse" value="#{societeController.selected.adresse}" title="#{bundle.CreateSocieteTitle_adresse}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_codePostale}" for="codePostale" />
+                        <p:inputText id="codePostale" value="#{societeController.selected.codePostale}" title="#{bundle.CreateSocieteTitle_codePostale}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_pays}" for="pays" />
+                        <p:inputText id="pays" value="#{societeController.selected.pays}" title="#{bundle.CreateSocieteTitle_pays}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_ville}" for="ville" />
+                        <p:inputText id="ville" value="#{societeController.selected.ville}" title="#{bundle.CreateSocieteTitle_ville}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_email}" for="email" />
+                        <p:inputText id="email" value="#{societeController.selected.email}" title="#{bundle.CreateSocieteTitle_email}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_telephone}" for="telephone" />
+                        <p:inputText id="telephone" value="#{societeController.selected.telephone}" title="#{bundle.CreateSocieteTitle_telephone}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_mobile}" for="mobile" />
+                        <p:inputText id="mobile" value="#{societeController.selected.mobile}" title="#{bundle.CreateSocieteTitle_mobile}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_fax}" for="fax" />
+                        <p:inputText id="fax" value="#{societeController.selected.fax}" title="#{bundle.CreateSocieteTitle_fax}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_siteWeb}" for="siteWeb" />
+                        <p:inputText id="siteWeb" value="#{societeController.selected.siteWeb}" title="#{bundle.CreateSocieteTitle_siteWeb}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_RC}" for="RC" />
+                        <p:inputText id="RC" value="#{societeController.selected.RC}" title="#{bundle.CreateSocieteTitle_RC}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_numeroIF}" for="numeroIF" />
+                        <p:inputText id="numeroIF" value="#{societeController.selected.numeroIF}" title="#{bundle.CreateSocieteTitle_numeroIF}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_TP}" for="TP" />
+                        <p:inputText id="TP" value="#{societeController.selected.TP}" title="#{bundle.CreateSocieteTitle_TP}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_ICE}" for="ICE" />
+                        <p:inputText id="ICE" value="#{societeController.selected.ICE}" title="#{bundle.CreateSocieteTitle_ICE}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_CNSS}" for="CNSS" />
+                        <p:inputText id="CNSS" value="#{societeController.selected.CNSS}" title="#{bundle.CreateSocieteTitle_CNSS}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_capitaleSociale}" for="capitaleSociale" />
+                        <p:inputText id="capitaleSociale" value="#{societeController.selected.capitaleSociale}" title="#{bundle.CreateSocieteTitle_capitaleSociale}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_numeroCompteBancaire}" for="numeroCompteBancaire" />
+                        <p:inputText id="numeroCompteBancaire" value="#{societeController.selected.numeroCompteBancaire}" title="#{bundle.CreateSocieteTitle_numeroCompteBancaire}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_logo}" for="logo" />
+                        <p:inputText id="logo" value="#{societeController.selected.logo}" title="#{bundle.CreateSocieteTitle_logo}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_dateCreation}" for="dateCreation" />
+                        <p:inputText id="dateCreation" value="#{societeController.selected.dateCreation}" title="#{bundle.CreateSocieteTitle_dateCreation}" />
+                        <p:outputLabel value="#{bundle.CreateSocieteLabel_droitExploitation}" for="droitExploitation" />
+                        <p:selectBooleanCheckbox id="droitExploitation" value="#{societeController.selected.droitExploitation}" />
+                    </p:panelGrid>
+                    
+                     <h:form id="test">
+                <p:fileUpload id="photo" fileUploadListener="#{societeController.upload}" mode="advanced" dragDropSupport="true"
+                                          multiple="false" update="messages" sizeLimit="100000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                            <p:growl id="messages" showDetail="true" />
+            </h:form>
+                    <p:commandButton actionListener="#{societeController.create}" value="#{bundle.Save}" update="display,:SocieteListForm:datalist,:growl" oncomplete="handleSubmit(args,'SocieteCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="SocieteCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

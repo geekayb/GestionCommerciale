@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFactureTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body" >
+
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 85%; margin: auto; border: 2px solid gray; border-radius: 10px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <h:form id="Form" >
+                                <p:panelGrid columns="2" rendered="#{paiementController.selected != null}" style="margin-top: 2%;width: 90%; margin: auto; margin-top: 2%">
+                                    <p:outputLabel value="Client" for="client" />
+                                    <p:selectOneMenu  style="width: 200px" id="client" value="#{factureController.client}" >
+                                        <f:selectItem id="null" value="#{null}"  itemLabel="---Select-----"/>
+                                        <f:selectItems value="#{clientController.list}"
+                                                       var="clientItem"
+                                                       itemValue="#{clientItem}"/>
+                                        <p:ajax listener="#{factureController.getFacturesRapport()}" event="change" update="datalist,:PaiementListForm" ></p:ajax>
+
+                                    </p:selectOneMenu>
+
+
+
+                                </p:panelGrid>
+
+
+                                <p:dataTable id="datalist" value="#{factureController.facturesRapport}" var="item"
+                                             selection="#{factureController.selected}"    
+                                             selectionMode="single"
+                                             rowKey="#{item.id}"
+                                             style="width: 90%; margin: auto"
+                                             >
+
+                                    <p:ajax event="rowSelect" listener="#{factureController.getPaimentsByFacture()}"  update=":PaiementListForm"/>
+
+
+
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListFactureTitle_etat}"/>
+                                        </f:facet>
+                                        <div style="background-color:#{factureController.getColor(item.etat)};width: max-content;padding: 4px;border-radius: 3px"><h:outputText id="etat" value="#{item.etat}" style="color: white; font-weight: bold !important"/></div>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Facture N°"/>
+                                        </f:facet>
+                                        <h:outputText value="#0#{item.dateFacture.month+1}#{item.dateFacture.year+1900}/#{item.id}" style="color: #1eb3c0;font-weight: normal !important"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Date d'émission"/>
+                                        </f:facet>
+                                        <h:outputText value="#{factureController.formatDateFacture(item.dateFacture)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nom du client"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.client.raisonSociale}" style="color: #1eb3c0;font-weight: normal !important"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Montant payé"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.montantPaye} Dhs" style="color: #76c232;font-weight: bold !important"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Montant Dû"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.montantDu} Dhs" style="color: #FF9933;font-weight: bold !important"/>
+                                    </p:column>
+                                    <p:column style="width:120px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value=""/>
+                                        </f:facet>
+                                        <p:commandButton styleClass="butonAp" process="datalist" id="editButton" actionListener="#{factureController.edite()}" rendered="#{utilisateurController.getConnectedUser().gererDonnees == true}" value="Voir/Modifier" icon="ui-icon-pencil"  >
+                                            <f:setPropertyActionListener value="#{item}" target="#{factureController.selected}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+
+                            </h:form>
+                        </div>
+
+                        <div class="ui-grid-row" style="margin-top: 3%; margin-bottom: 10%; width: 95%; margin-left: 3%">
+                            <div class="ui-grid-col-6">
+                                <div class="ui-grid-row">
+                                     <h:form id="PaiementListForm">
+                                    <p:panel header="Historique de paiement">
+                                        <p:dataTable id="datalist" value="#{factureController.selected.paiements}" var="item"
+                                                     selection="#{paiementController.selected}"                                          
+                                                     rowKey="#{item.id}"
+                                                     >
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.ListPaiementTitle_datePaiement}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.datePaiement}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" />
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.ListPaiementTitle_montant}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.montant} Dhs"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.ListPaiementTitle_remarque}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.remarque}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.ListPaiementTitle_mode}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.mode}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Type de paiement"/>
+                                                </f:facet>
+                                                <h:outputText value="#{factureController.getTypePaiement(item.avance)}"/>
+                                            </p:column>
+
+
+                                        </p:dataTable>
+                                    </p:panel>
+                                          <p:panel header="Montant de la facture" style="width: 25%; text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                              <h2 style="color: brown"> #{factureController.selected.nouveauSousTotal} Dhs</h2>
+                                         <br></br>
+                                    </p:panel>
+                                          <p:panel header="Le reste à payer" style="margin-left: 10%;width: 25%; text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                              <h2 style="color: red">#{factureController.selected.montantDu} Dhs</h2>
+                                         <br></br>
+                                    </p:panel>
+                                          <p:panel header="Montant total payé" style="margin-left: 10%;width: 25%; text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                              <h2 style="color: green"> #{factureController.selected.montantPaye} Dhs</h2>
+                                        <br></br>
+                                    </p:panel>
+                                     </h:form>
+                                    
+                                    
+                                   
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </ui:define>
+    </ui:composition>
+
+</html>

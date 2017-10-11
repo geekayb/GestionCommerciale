@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="PaiementEditDlg" widgetVar="PaiementEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditPaiementTitle}">
+            <h:form id="PaiementEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{paiementController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditPaiementLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{paiementController.selected.id}" title="#{bundle.EditPaiementTitle_id}" />
+                        <p:outputLabel value="#{bundle.EditPaiementLabel_datePaiement}" for="datePaiement" />
+                        <p:calendar id="datePaiement" pattern="MM/dd/yyyy" value="#{paiementController.selected.datePaiement}" title="#{bundle.EditPaiementTitle_datePaiement}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditPaiementLabel_montant}" for="montant" />
+                        <p:inputText id="montant" value="#{paiementController.selected.montant}" title="#{bundle.EditPaiementTitle_montant}" />
+                    
+                        <p:outputLabel value="#{bundle.EditPaiementLabel_remarque}" for="remarque" />
+                        <p:inputText id="remarque" value="#{paiementController.selected.remarque}" title="#{bundle.EditPaiementTitle_remarque}" />
+                      
+                        <p:outputLabel value="#{bundle.EditPaiementLabel_mode}" for="mode" />
+                        <p:inputText id="mode" value="#{paiementController.selected.mode}" title="#{bundle.EditPaiementTitle_mode}" />
+                      
+                        <p:outputLabel value="#{bundle.EditPaiementLabel_facture}" for="facture" />
+                        <p:selectOneMenu id="facture" value="#{paiementController.selected.facture}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{factureController.itemsAvailableSelectOne}"
+                                           var="factureItem"
+                                           itemValue="#{factureItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{paiementController.update}" value="#{bundle.Save}" update="display,:PaiementListForm:datalist,:growl" oncomplete="handleSubmit(args, 'PaiementEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="PaiementEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

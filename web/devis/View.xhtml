@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog width="55%" height="100%"  maximizable="true" minimizable="true" closable="true"  dynamic="true" position="center"  id="DevisViewDlg" widgetVar="DevisViewDialog" modal="true" appendTo="@(body)"  header="Aperçu de la devis N° #0#{devisController.selected.dateEmission.month+1}#{devisController.selected.dateEmission.year+1900}/#{devisController.selected.id}">
+
+            <h:form id="DevisViewForm" style="background-color: white">
+                <h:panelGroup id="display">
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12" style="padding: 10px">
+                                <u style="color: #4582b6">
+                                    <h1 style="margin-left: 1%;color: #4582b6"> <h:outputText value="Devis N° "/>
+                                        <h:outputText   id="devis" value="#0#{devisController.selected.dateEmission.month+1}#{devisController.selected.dateEmission.year+1900}/#{devisController.selected.id}" />
+                                    </h1> 
+                                </u>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;"  value="Société:  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.raisonSociale}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;"  value="Adresse:  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.adresse}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;"  value="Tél  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.telephone}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;"  value="Email  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.email}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.siteWeb}"/>
+                                <br></br>
+                                <hr></hr>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row" style="background-color: #559bd7; margin-top: 2%;margin-bottom: 2%;padding: 10px">
+                            <div class="ui-grid-col-12">
+                                <u style="color:white"> <h2><h:outputText style="color: white; font-weight: bold;" value="Client:  "/>
+                                        <h:outputText   style="color: white; font-weight: bold;" id="clientRc" value="#{devisController.selected.client.raisonSociale}" />
+                                        <h:outputText style="margin-left: 40%" value="Montant total TTC Du: "/>
+                                        <h:outputText   id="montantdu" style="color : red" value="#{devisController.selected.montantDu} #{devisController.selected.devise} " />      
+
+                                    </h2></u><br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Adresse:  "/>
+                                <h:outputText   style="font-size: 15px; color: white;" id="clientAd" value="#{devisController.selected.client.adresse}" />
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Tel  "/>
+                                <h:outputText  style="font-size: 15px; color: white;" id="clientTel" value="#{devisController.selected.client.telephone}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Email:  " />
+                                <h:outputText style="font-size: 15px; color: white;"  id="clientEmail" value="#{devisController.selected.client.email}" />
+                                <br></br>
+
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Ville  " rendered="#{devisController.selected.client.ville!=devisController.etat}"/>
+                                <h:outputText  style="font-size: 15px; color: white;" id="clientVille" value="#{devisController.selected.client.ville}" rendered="#{devisController.selected.client.ville!=devisController.etat}"/>      
+                                <br></br>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12" style="margin:2%">
+                                <p:dataTable id="datalist" value="#{devisController.findDevisItemsByDevis()}" var="item"
+
+
+                                             rowKey="#{item.id}"
+
+
+                                             >
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListDevisItemTitle_produit}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.produit.libelle}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Prix unitaire"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.prixDevise}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListDevisItemTitle_quantite}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.quantite}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Taux TVA"/>
+                                        </f:facet>
+                                        <h:outputText value="#{devisController.taxToString(item.tax)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListDevisItemTitle_remise}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.remise}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListDevisItemTitle_sousTotalHT}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.sousTotalHT}"/>
+                                    </p:column>
+
+                                    <f:facet name="footer">
+                                    </f:facet>
+                                </p:dataTable>   
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr></hr>
+
+                    <div class="ui-grid-row" style="margin-left: 60%; font-size: 20px">
+                        <div class="ui-grid-col-12">
+                            <h:panelGrid columns="2" cellpadding="3" style="width: 100%">
+                                <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Prix HT d'article" for="sousTotal" />
+                                <p:outputLabel id="sousTotal" style="font-weight: bold" value="#{devisController.selected.sousTotal}#{devisController.selected.devise}" title="#{bundle.CreateDevisTitle_sousTotal}" />
+                    
+                                <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="#{bundle.CreateDevisLabel_remise}" for="remise" />
+                                <p:outputLabel id="remise" style="font-weight: bold" value="#{devisController.selected.remise}#{devisController.selected.devise}" title="#{bundle.CreateDevisTitle_remise}" >
+                                </p:outputLabel>   
+                        
+                                <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Nouveau total HT: " for="nouveauSousTotal"  />
+                                <p:outputLabel style="color: red;font-weight: bold " id="nouveauSousTotal" value="#{devisController.selected.nouveauSousTotal}#{devisController.selected.devise}" title="#{bundle.CreateDevisTitle_nouveauSousTotal}" />
+                     
+                                <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Total TVA" for="totalTax" />
+                                <p:outputLabel id="totalTax" style="font-weight: bold" value="#{devisController.selected.totalTax}#{devisController.selected.devise}" title="#{bundle.CreateDevisTitle_totalTax}" />
+                     
+
+                                <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Total TTc" for="montantDu" />
+                                <p:outputLabel style="color: red;font-weight: bold" id="montantDu" value="#{devisController.selected.montantDu}#{devisController.selected.devise}" title="#{bundle.CreateDevisTitle_montantDu}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                     <hr></hr>
+                          <br></br>
+                           
+                         <h:panelGrid columns="2"  style="width: 70%;margin-left: 2%">
+                        <p:outputLabel style="font-size: 15px; color: orange; font-weight: bold;" for="condition" value="Condition de devis"  />
+
+                        <p:outputLabel style="font-size: 15px; color: #428bca; font-weight: bold;" id= "condition"  value="#{devisController.selected.conditionDevis}"  />
+                         </h:panelGrid>
+                        <br></br>
+                    <p:commandButton value="#{bundle.Close}" onclick="DevisViewDialog.hide()" style="margin-bottom: 2%; margin-left: 2%"/>
+                </h:panelGroup>
+            </h:form>
+
+        </p:dialog>
+    </ui:composition>
+</html>

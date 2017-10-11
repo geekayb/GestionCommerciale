@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFactureTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body" >
+
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 90%; margin-top: 7%; border: 1px double gray; border-radius: 0px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <h:form id="PaiementListForm" >
+                                <p:panelGrid columns="7" rendered="#{paiementController.selected != null}" style="width: 100%; margin: auto">
+                                    <p:outputLabel value="Client" for="client" />
+                                    <p:selectOneMenu  style="width: 200px" id="client" value="#{paiementController.client}" >
+                                        <f:selectItem id="null" value="#{null}"  itemLabel="---Select-----"/>
+                                        <f:selectItems value="#{clientController.list}"
+                                                       var="clientItem"
+                                                       itemValue="#{clientItem}"/>
+
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="De" for="dateDebut" />
+                                    <p:calendar style="width: 250px" id="dateDebut" pattern="dd/MM/yyyy" value="#{paiementController.dateDebute}" title="De"  showOn="button">
+
+                                    </p:calendar>
+                                    <p:outputLabel value="Jusqu'à" for="dateFin" />
+                                    <p:calendar style="width: 300px" id="dateFin" pattern="dd/MM/yyyy" value="#{paiementController.dateFin}" title="Jusqu'à"  showOn="button">
+                                    </p:calendar>
+                                    <p:commandButton value="Génerer le rapport" actionListener="#{paiementController.getList()}" update="datalist, montantTotal" >   
+                                        <p:ajax listener="#{paiementController.sizeList()}"  update="panel1"></p:ajax>
+                                    </p:commandButton>
+
+                                </p:panelGrid>
+                                <p:panel header="Résumé des paiements" style="margin-top: 3%">
+
+                                    <p:dataTable id="datalist" value="#{paiementController.list}" var="item"                                           
+                                                 rowKey="#{item.id}"
+                                                 style="width: 90%; margin: auto; font-size: 15px !important"
+                                                 >
+
+
+
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_datePaiement}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.datePaiement}" style="color: green">
+                                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_mode}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.mode}" style="color: orange;"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Client"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.facture.client.raisonSociale}" style="color: Blue" />
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_montant}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.montant} Dhs" style="color: brown; font-weight: bold" />
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                    <p:panelGrid id="panel1" columns="2"  style="background-color: red !important; margin-top: 2%;width: 90%; margin: auto"  >
+
+                                        <b><p:outputLabel value="Montant total" style="color : orange;font-weight: bold; font-size: 15px !important; " /></b>
+
+                                        <p:outputLabel id="montantTotal" style="color: green; font-weight: bold" value="#{paiementController.montantTotalPaiementDh} Dhs"  />
+                                    </p:panelGrid>
+                                </p:panel>
+                            </h:form>
+                        </div>
+
+
+
+
+
+                        <!--
+                        
+                                                            <f:facet name="footer">
+                                                                <p:commandButton process="datalist" id="viewButton"  icon="ui-icon-search" value="Aperçu" update=":FactureViewForm" oncomplete="PF('FactureViewDialog').show()" />
+                                                                <p:commandButton process="datalist" id="editButton" actionListener="#//{factureController.edite()}" rendered="#//{utilisateurController.getConnectedUser().gererDonnees == true}"  icon="ui-icon-pencil" value="Modifier" />
+                                                                <p:commandButton process="datalist"  id="createButton" rendered="#//{utilisateurController.getConnectedUser().payerFacture == true}" icon="ui-icon-plus"   value="Payer" actionListener="#//{paiementController.prepareCreate}" update=":PaiementCreateForm" oncomplete="PF('PaiementCreateDialog').show()"/>
+                                                                <p:growl id="message" showDetail="true"/>   
+                                                                <p:commandButton process="datalist" id="Payertout" icon="ui-icon-plus"  rendered="#//{utilisateurController.getConnectedUser().payerFacture == true}" actionListener="#//{factureController.popupa}" value="Payer le reste"  update=":FactureListForm:datalist, message" >
+                                                                    <p:confirm id="confirm" header="Confirmer le paiement"  message="Etes vous sure de payer tout le montant restant #//{factureController.selected.montantDu} Dhs"  icon="ui-icon-alert"></p:confirm>
+                                                                </p:commandButton>
+                                                                <p:confirmDialog global ="true" showEffect="fade">
+                                                                    <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                                    <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        
+                                                                </p:confirmDialog>
+                        
+                                                                <p:column>
+                                                                    <f:facet name="header">
+                                                                        <h:outputText value="imprimer"/>
+                                                                    </f:facet>
+                                                                    <p:commandButton process="datalist" action="#//{factureController.imprimerFacture()}" ajax="false" value="Impression" />
+                                                                </p:column>
+                                                            </f:facet>
+                        -->
+                    </div>
+                </div>
+            </div>
+
+        </ui:define>
+    </ui:composition>
+
+</html>

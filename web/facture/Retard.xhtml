@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFactureTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100% ">
+                <div class="ui-grid-row">
+                    
+                    <div class="ui-grid-col-12">
+                         <h:form id="CritereForm">
+                            <p:fieldset id="Recherche" legend="Filtre" toggleable="true" style="margin-top: 1%; margin-left: 10%; width: 80%" >
+                                <h:panelGrid columns="4" cellpadding="10">
+                                    <p:panelGrid columns="2">
+                                        <h:outputText value="Recherche: " />
+
+                                        <p:inputText id="critere" value="#{factureController.recherche}">
+                                            <p:ajax event="keyup" listener="#{factureController.findFactureRetardByCritere()}"  update=":FactureListForm:datalist"/>
+                                        </p:inputText>
+                                    </p:panelGrid>  
+                                    
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                        <h:form id="FactureListForm" style="margin-top: 2%">
+                            <p:fieldset id="availableClientsField" legend="Liste des factures en retard" toggleable="true" style="margin-left: 5% ;width: 90%" >
+                                <p:dataTable id="datalist" value="#{factureController.facturesEnRetard}" var="item"
+                                             selection="#{factureController.selected}"
+                                             paginator="true"
+                                             rowKey="#{item.id}"
+                                             rows="10"
+                                             rowsPerPageTemplate="10,20,30,40,50"
+
+                                             >
+
+                                   
+                                    <p:column style="width: 15%">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListFactureTitle_etat}"/>
+                                        </f:facet>
+                                        <div style="background-color:#{factureController.getColor(item.etat)};width: max-content;border-radius: 4px;display: inline-block;padding: 2px"><h:outputText id="etat" value="#{item.etat}" style="color: white; font-weight: bold !important; padding: 1px"/></div>
+                                        <div style="background-color:#FF3333; width: max-content;display: inline-block;border-radius: 4px; padding: 2px"><h:outputText id="retard" value="En retard" style="color: white; font-weight: bold !important;padding: 1px"/></div>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Facture N°"/>
+                                        </f:facet>
+                                        <h:outputText value="#0#{item.dateFacture.month+1}#{item.dateFacture.year+1900}/#{item.id}" style="color: darkturquoise;font-weight: normal !important"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Date d'émission"/>
+                                        </f:facet>
+                                        <h:outputText value="#{factureController.formatDateFacture(item.dateFacture)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nom du client"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.client.raisonSociale}" style="color: darkturquoise;font-weight: normal !important"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListFactureTitle_montantPaye}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.montantPaye}#{item.devise}" style="color: green;font-weight: bold !important"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListFactureTitle_montantDu}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.montantDu}#{item.devise}" style="color: orange;font-weight: bold !important"/>
+                                    </p:column>
+                                    
+                                    
+
+
+
+                                    <p:column style="width:340px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Actions"/>
+                                        </f:facet>
+                                        <p:commandButton  styleClass="butonAp" id="viewButton"  icon="ui-icon-search" value="Aperçu" update=":FactureViewForm" oncomplete="PF('FactureViewDialog').show()" >
+                                            <f:setPropertyActionListener value="#{item}" target="#{factureController.selected}" />
+                                        </p:commandButton>
+
+
+
+                                        <p:commandButton styleClass="butonMod" process="datalist" id="editButton" actionListener="#{factureController.edite()}" rendered="#{utilisateurController.getConnectedUser().gererDonnees == true}" value="Modifier" icon="ui-icon-pencil"  >
+                                            <f:setPropertyActionListener value="#{item}" target="#{factureController.selected}" />
+                                        </p:commandButton>
+
+
+
+                                        <p:commandButton styleClass="butonPay" id="createButton" rendered="#{utilisateurController.getConnectedUser().payerFacture == true}" icon="ui-"  value="Payer"  actionListener="#{paiementController.prepareCreate}" update=":PaiementCreateForm" oncomplete="PF('PaiementCreateDialog').show()">
+                                            <f:setPropertyActionListener value="#{item}" target="#{factureController.selected}" />
+                                        </p:commandButton>
+
+
+
+                                        <p:growl id="message" showDetail="true"/>   
+
+
+
+                                      
+
+
+
+
+
+                                        <p:commandButton styleClass="butonPDF" value="PDF" rendered="#{utilisateurController.getConnectedUser().impression == true}" action="#{factureController.imprimerFacture()}" ajax="false" icon="ui-icon-file-pdf" >
+                                            <f:setPropertyActionListener value="#{item}" target="#{factureController.selected}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:fieldset>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+
+            <ui:include src="View.xhtml"/>
+            <ui:include src="/paiement/Create.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

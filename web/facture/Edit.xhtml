@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 90%; margin: auto; border: 2px solid gray; border-radius: 10px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-8" >
+                            <h:form id="FactureEditForm"  >
+                                <p:commandButton style="margin-left: 70%" actionListener="#{factureController.update()}" value="Sauvegarder" update=":growl"/>
+                                <p:commandButton  style="" id="Payertout" icon="ui-icon-plus" value="Régler" rendered="#{utilisateurController.getConnectedUser().payerFacture == true}" actionListener="#{factureController.popupa}"  update=":growl" >
+                                    <f:setPropertyActionListener value="#{item}" target="#{factureController.selected}" />
+                                    <p:confirm id="confirm" header="Confirmer le paiement"  message="Etes vous sure de payer tout le montant restant #{factureController.selected.montantDu} #{factureController.selected.devise}"  icon="ui-icon-alert"></p:confirm>
+                                    <p:confirmDialog global ="true" showEffect="fade">
+                                        <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+                                    </p:confirmDialog>
+                                    
+                                </p:commandButton>   
+                                <p:button style="" outcome="List.xhtml" value="Annuler"/>
+                                <p:panel header="les informations de la facture" style="width: 60%; margin-left: 3%; display: inline-block" >
+
+                                    <h:panelGroup id="display">
+
+
+                                        <p:panelGrid columns="4" rendered="#{factureController.selected != null}" style="width: 100% ">
+                                            <p:outputLabel value="N° Facture" for="id" />
+                                            <p:inputText style="width: 100px" disabled="true" id="id" value="#0#{factureController.selected.dateFacture.month+1}#{factureController.selected.dateFacture.year+1900}/#{factureController.selected.id}" title="#{bundle.EditFactureTitle_id}" />
+                                            <p:outputLabel value="#{bundle.EditFactureLabel_client}" for="client" />
+                                            <p:selectOneMenu style="width: 200px" id="client" value="#{factureController.selected.client}" >
+                                                <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                                <f:selectItems value="#{clientController.list}"
+                                                               var="clientItem"
+                                                               itemValue="#{clientItem}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="#{bundle.EditFactureLabel_dateFacture}" for="dateFacture" />
+                                            <p:calendar style="width: 300px" id="dateFacture" pattern="MM/dd/yyyy" value="#{factureController.selected.dateFacture}" title="#{bundle.EditFactureTitle_dateFacture}"  showOn="button"/>
+                                            <p:outputLabel value="#{bundle.EditFactureLabel_dateEcheance}" for="dateEcheance" />
+                                            <p:calendar  style="width: 300px !important" id="dateEcheance" pattern="MM/dd/yyyy" value="#{factureController.selected.dateEcheance}" title="#{bundle.EditFactureTitle_dateEcheance}"  showOn="button"/>
+                                            <p:outputLabel value="Devise" for="devise" />
+                                            <p:selectOneMenu disabled="true" style="width: 200px" id="devise" value="#{factureController.selected.devise}" >
+                                                <f:selectItem  itemValue="$" itemLabel="Dollar américain (USD)" />
+                                                <f:selectItem  itemValue="€" itemLabel="Euro (EUR)" />
+                                                <f:selectItem  itemValue="Dhs" itemLabel="Dirham marocain (DH)" />                                                                     
+                                                <f:selectItem  itemValue="£" itemLabel="Livre britannique (GBP)" />
+                                             </p:selectOneMenu>
+                                            <p:outputLabel value="Condition de facture" for="conditionFacture" />
+                                            <p:inputTextarea id= "conditionFacture" rows="2" style="width: 90%;font-size: 20px" value="#{factureController.selected.conditionFacture}"  />
+
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+
+
+                                </p:panel>
+
+                                <div class="ui-grid-col-6" style="border: 8px solid red; border-radius: 10px; 
+                                     background-color: white; display: inline-block; width: 23%; height: 17%; color: red;
+                                     position: absolute; margin-left:3%;margin-top: 2%; font-size: 55px; 
+                                     text-align: center">#{factureController.selected.etat}
+                                    <p:panelGrid style="margin-top: 12%;width: 100%" columns="2" >
+                                        <p:outputLabel value="changer le status" for="status" />
+                                        <p:selectOneMenu  style="width: 150px"  id="status" value="#{factureController.selected.etat}" >
+                                            <f:selectItem  itemValue="payée" itemLabel="payée" />
+                                            <f:selectItem  itemValue="Non payée" itemLabel="non payée" />
+                                            <f:selectItem  itemValue="annulée" itemLabel="annulée" />
+
+
+                                        </p:selectOneMenu>
+                                    </p:panelGrid>
+
+                                </div>
+
+                            </h:form>
+
+                        </div>
+
+
+                        <div class="ui-grid-col-6" >
+                            <h:form id="FactureItemListForm">
+                                <p:panel header="Lignes de facture" style="width: 60%; margin-left: 3%; margin-top: 1%" >
+
+                                    <p:dataTable id="datalist" value="#{factureController.findFactureItemsByFacture()}" var="item"
+                                                 selectionMode="single" selection="#{factureItemController.selected}"
+                                                 paginator="true"
+                                                 rowKey="#{item.id}"
+                                                 rows="10"
+                                                 rowsPerPageTemplate="10,20,30,40,50"
+                                                 >
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_produit}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.produit.libelle}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Prix unitaire"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.prixDevise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_quantite}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.quantite}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Taux TVA"/>
+                                            </f:facet>
+                                            <h:outputText value="#{factureController.taxToString(item.tax)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_remise}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.remise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_sousTotalHT}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.sousTotalHT}"/>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{factureItemController.prepareCreate}" update=":FactureItemCreateForm" oncomplete="PF('FactureItemCreateDialog').show()"/>
+                                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":FactureItemEditForm" oncomplete="PF('FactureItemEditDialog').show()" disabled="#{empty factureItemController.selected}"/>
+                                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{factureController.deleteFactureItem(factureItemController.selected)}" update=":growl,:FactureItemListForm:datalist,:form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:montantPaye,:form:montantDu,:form:remise,:form:totalAvecRemise" disabled="#{empty factureItemController.selected}"/>
+                                        </f:facet>
+                                    </p:dataTable>   
+                                </p:panel>
+                            </h:form>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-grid-row" style="margin-top: -15%; margin-left: 68%">
+                        <div class="ui-grid-col-6">
+                            <div class="ui-grid-row">
+                                <h:form id="form">
+                                    <p:panelGrid columns="2" style="width: 90% ;text-align: left">
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_sousTotal}" for="sousTotal" />
+                                        <p:inputText style=" font-weight: bold;color:black" id="sousTotal" value="#{factureController.selected.sousTotal} #{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_sousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_totalTax}" for="totalTax" />
+                                        <p:inputText style=" font-weight: bold;color:red" id="totalTax" value="#{factureController.selected.totalTax} #{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_totalTax}" disabled="true" readonly="true" />
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_nouveauSousTotal}" for="nouveauSousTotal" />
+                                        <p:inputText style="font-weight: bold" id="nouveauSousTotal" value="#{factureController.selected.nouveauSousTotal} #{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_nouveauSousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_remise} " for="remise" />
+                                        <p:inputText style=" font-weight: bold" id="remise" value="#{factureController.selected.remise}" title="#{bundle.CreateFactureTitle_remise}" >
+                                            <p:ajax listener="#{factureController.calculerMontantDu()}" process="remise" event="keyup" update="totalAvecRemise,montantDu"></p:ajax>
+                                        </p:inputText>   
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_totalAvecRemise}" for="totalAvecRemise" />
+                                        <p:inputText style=" font-weight: bold" id="totalAvecRemise" value="#{factureController.selected.totalAvecRemise}" title="#{bundle.CreateFactureTitle_totalAvecRemise}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_montantPaye}" for="montantPaye" />
+                                        <p:inputText style="font-weight: bold;color:brown" id="montantPaye" value="#{factureController.selected.montantPaye} #{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_montantPaye}" disabled="true"  readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_montantDu}" for="montantDu" />
+                                        <p:inputText style=" font-weight: bold;color:green" id="montantDu" value="#{factureController.selected.montantDu} #{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_montantDu}" disabled="true" readonly="true"/>
+
+
+                                    </p:panelGrid>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-grid-row" style="margin-top: 5%; margin-bottom: 10%; width: 95%; margin-left: 3%">
+                        <div class="ui-grid-col-6">
+                            <div class="ui-grid-row">
+
+                                <p:panel header="Historique de paiement">
+                                    <p:dataTable id="datalist" value="#{factureController.getPaimentsByFacture()}" var="item"
+                                                 selection="#{paiementController.selected}"                                          
+                                                 rowKey="#{item.id}"
+                                                 >
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_datePaiement}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.datePaiement}">
+                                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_montant}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.montant} #{item.facture.devise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_remarque}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.remarque}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListPaiementTitle_mode}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.mode}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Type de paiement"/>
+                                            </f:facet>
+                                            <h:outputText value="#{factureController.getTypePaiement(item.avance)}"/>
+                                        </p:column>
+
+
+                                    </p:dataTable>
+                                </p:panel>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-6" style="width: 80%; margin: auto;margin-bottom: 5%;margin-top: 3%">
+                            <h:form id="form2">
+
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ui:include src="/factureItem/Create.xhtml"/>
+            <ui:include src="/factureItem/Edit.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFactureItemTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="FactureItemListForm">
+                <p:panel header="#{bundle.ListFactureItemTitle}">
+                    <p:dataTable id="datalist" value="#{factureItemController.items}" var="item"
+                                 selection="#{factureItemController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 >
+
+
+                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_facture}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.facture}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_produit}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.produit}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_quantite}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.quantite}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_tax}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.tax}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_sousTotalHT}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.sousTotalHT}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_remise}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.remise}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListFactureItemTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton process="datalist" id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{factureItemController.prepareCreate}" update=":FactureItemCreateForm" oncomplete="PF('FactureItemCreateDialog').show()"/>
+                            <p:commandButton  process="datalist" id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":FactureItemEditForm" oncomplete="PF('FactureItemEditDialog').show()" />
+                            <p:commandButton  process="datalist" id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{factureItemController.destroy}" update=":growl,datalist" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

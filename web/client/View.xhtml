@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ClientViewDlg" widgetVar="ClientViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Information client">
+            <h:form id="ClientViewForm" style="background-color: white">
+                <h:panelGroup id="display">
+                     <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+                                    <p:graphicImage value="/client2.png" width="150" height="150" style="margin-left: 2%;border-radius: 10px"/>
+
+                                    <p:outputPanel style="margin-left: 8%">
+                                        <u><h1 style="margin-left: 5%;color: #4582b6">Client: #{clientController.selected.raisonSociale}</h1></u>
+
+
+
+                                        <h:panelGrid columns="4" cellpadding="15" style="width: 100%">
+
+
+                                            <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Adresse:" />
+                                            <h:outputText style="font-size: 15px;color: #428bca;font-weight: bold" value="#{clientController.selected.adresse}" />
+
+                                            <h:outputText style="font-size: 15px; color: orange;font-weight: bold;" value="Télephone: " />
+                                            <h:outputText style="font-size: 15px;color: #428bca;font-weight: bold" value="#{clientController.selected.telephone}" />
+                                            <h:outputText style="font-size: 15px; color: orange;font-weight: bold;" value="Email: " />
+                                            <h:outputText style="font-size: 15px;color: #428bca;font-weight: bold" value="#{clientController.selected.email}" />
+                                            <h:outputText style="font-size: 15px; color: orange;font-weight: bold;" value="Pays: " />
+                                            <h:outputText style="font-size: 15px;color: #428bca;font-weight: bold" value="#{clientController.selected.pays}"/>
+                                            <h:outputText style="font-size: 15px; color: orange;font-weight: bold" value="Ville:" />
+                                            <h:outputText style="font-size: 15px;color: #428bca;font-weight: bold" value="#{clientController.selected.ville}" />
+                                            <h:outputText style="font-size: 15px; color: orange;font-weight: bold" value="Fax:" />
+                                            <h:outputText style="font-size: 15px;color: #428bca;font-weight: bold" value="#{clientController.selected.fax}" />
+
+                                           
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+
+                                </h:panelGrid>
+                    <p:commandButton style="margin: 3%" value="#{bundle.Close}" onclick="ClientViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

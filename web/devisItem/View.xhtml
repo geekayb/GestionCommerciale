@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DevisItemViewDlg" widgetVar="DevisItemViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewDevisItemTitle}">
+            <h:form id="DevisItemViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{devisItemController.selected != null}">
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_id}"/>
+                        <h:outputText value="#{devisItemController.selected.id}" title="#{bundle.ViewDevisItemTitle_id}"/>
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_quantite}"/>
+                        <h:outputText value="#{devisItemController.selected.quantite}" title="#{bundle.ViewDevisItemTitle_quantite}"/>
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_tax}"/>
+                        <h:outputText value="#{devisItemController.selected.tax}" title="#{bundle.ViewDevisItemTitle_tax}"/>
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_sousTotalHT}"/>
+                        <h:outputText value="#{devisItemController.selected.sousTotalHT}" title="#{bundle.ViewDevisItemTitle_sousTotalHT}"/>
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_remise}"/>
+                        <h:outputText value="#{devisItemController.selected.remise}" title="#{bundle.ViewDevisItemTitle_remise}"/>
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_produit}"/>
+                        <h:outputText value="#{devisItemController.selected.produit}" title="#{bundle.ViewDevisItemTitle_produit}"/>
+                        <h:outputText value="#{bundle.ViewDevisItemLabel_devis}"/>
+                        <h:outputText value="#{devisItemController.selected.devis}" title="#{bundle.ViewDevisItemTitle_devis}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="DevisItemViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

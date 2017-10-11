@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 90%; margin: auto; border: 2px solid gray; border-radius: 10px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-8"  >
+                            <h:form id="DevisEditForm"  >
+                                <p:commandButton style="margin-left: 3%" icon="ui-icon-save" actionListener="#{devisController.update()}" value="Sauvegarder" update=":growl"/>
+                                <p:button icon="ui-icon-cancel" outcome="List.xhtml" value="Annuler"/>
+                                <p:growl id="message" showDetail="true" />   
+                                <p:commandButton  style="margin-left: 70%" actionListener="#{devisController.convertirToFacture()}" value="Convertir en facture" update=":growl, message" >
+                                    <p:confirm id="confirm" header="Confirmer la conversion"  message="Etes vous sur que vous voulez générer une facture et supprimer le devis. Vous ne serez pas en mesure d'annuler cette action !"  icon="ui-icon-alert"></p:confirm>
+                                </p:commandButton>
+                                <p:confirmDialog global ="true" showEffect="fade">
+                                    <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="Annuler" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+                                </p:confirmDialog>
+
+
+                                <p:commandButton  value="Supprimer" action="#{devisController.destroy()}" ajax="false" icon="ui-icon-trash" />
+
+                                <p:panel header="les informations du devis" style="width: 65%; margin-left: 3%; display: inline-block" >
+
+                                    <h:panelGroup id="display">
+
+
+                                        <p:panelGrid columns="4" rendered="#{devisController.selected != null}" style="width: 100% ">
+                                            <p:outputLabel value="N° Devis" for="id" />
+                                            <p:inputText style="width: 200px"  disabled="true" id="id" value="#0#{devisController.selected.dateEmission.month+1}#{devisController.selected.dateEmission.year+1900}/#{devisController.selected.id}" title="#{bundle.EditDevisTitle_id}" />
+                                            <p:outputLabel value="#{bundle.EditDevisLabel_client}" for="client" />
+                                            <p:selectOneMenu style="width: 250px"  id="client" value="#{devisController.selected.client}" >
+                                                <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                                <f:selectItems value="#{clientController.list}"
+                                                               var="clientItem"
+                                                               itemValue="#{clientItem}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="#{bundle.EditDevisLabel_dateEmission}" for="dateDevis" />
+                                            <p:calendar style="width: 300px"  id="dateDevis" pattern="MM/dd/yyyy" value="#{devisController.selected.dateEmission}" title="#{bundle.EditDevisTitle_dateDevis}"  showOn="button"/>
+                                            <p:outputLabel value="Condition de devis" for="conditionDevis" />
+                                            <p:inputTextarea id= "conditionDevis" cols="40" rows="2" value="#{devisController.selected.conditionDevis}"  />
+                                            <p:outputLabel value="#{bundle.EditDevisLabel_dateEcheance}" for="dateEcheance" />
+                                            <p:calendar style="width: 300px"  id="dateEcheance" pattern="MM/dd/yyyy" value="#{devisController.selected.dateEcheance}" title="#{bundle.EditDevisTitle_dateEcheance}"  showOn="button"/>
+
+
+                                            <p:outputLabel value="Sujet" for="sujet" />
+                                            <p:inputTextarea  cols="40" rows="2" id="sujet" value="#{devisController.selected.sujet}" />
+
+                                            <p:outputLabel value="Devise" for="devise" />
+                                            <p:selectOneMenu disabled="true" style="width: 200px; font-weight: bold" id="devise" value="#{devisController.selected.devise}" >
+                                                <f:selectItem  itemValue="$" itemLabel="Dollar américain (USD)" />
+                                                <f:selectItem  itemValue="€" itemLabel="Euro (EUR)" />
+                                                <f:selectItem  itemValue="Dhs" itemLabel="Dirham marocain (DH)" />                                                                     
+                                                <f:selectItem  itemValue="£" itemLabel="Livre britannique (GBP)" />
+                                            </p:selectOneMenu>
+                                        </p:panelGrid>
+
+                                    </h:panelGroup>
+
+
+                                </p:panel>
+                                <div class="ui-grid-col-6" style="border: 8px double #{devisController.getColor(devisController.selected.etat)};height: 15%;width: 20%; text-align: center;
+                                     background-color: white; display: inline-block;  color: #{devisController.getColor(devisController.selected.etat)};
+                                     position: absolute; margin-left:2%;margin-top: 1%; font-size: 55px; 
+                                     text-align: center">#{devisController.selected.etat}
+                                    <p:panelGrid style="margin-top: 14%;width: 110%" columns="2" rendered="#{devisController.selected != null}" >
+                                        <p:outputLabel value="changer l'état du devis" for="status" />
+                                        <p:selectOneMenu style="width: 150px" id="status" value="#{devisController.selected.etat}">
+                                            <f:selectItem id="nulle" itemValue="tout" itemLabel="Choisissez l'option" />
+                                            <f:selectItem  itemValue="Brouillon" itemLabel="Brouillon" />
+                                            <f:selectItem  itemValue="Envoyé" itemLabel="Envoyé" />
+                                            <f:selectItem  itemValue="Consulté" itemLabel="Consulté" />
+                                            <f:selectItem  itemValue="Approuvé" itemLabel="Approuvé" />
+                                            <f:selectItem  itemValue="Rejeté" itemLabel="Rejeté" />
+                                            <f:selectItem  itemValue="Annulé" itemLabel="Annulé" />
+                                        </p:selectOneMenu>
+                                    </p:panelGrid>
+                                </div>
+                            </h:form>
+                        </div>
+
+
+                        <div class="ui-grid-col-6" >
+                            <h:form id="DevisItemListForm">
+                                <p:panel header="Lignes de devis" style="width: 60%; margin-left: 3%; margin-top: 1%" >
+
+
+                                    <p:dataTable id="datalist" value="#{devisController.findDevisItemsByDevis()}" var="item"
+                                                 selectionMode="single" selection="#{devisItemController.selected}"                                                 
+                                                 rowKey="#{item.id}"                                                 
+                                                 >
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListDevisItemTitle_produit}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.produit.libelle}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Prix unitaire"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.prixDevise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListDevisItemTitle_quantite}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.quantite}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="TVA"/>
+                                            </f:facet>
+                                            <h:outputText value="#{devisController.taxToString(item.tax)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListDevisItemTitle_remise}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.remise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListDevisItemTitle_sousTotalHT}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.sousTotalHT}"/>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{devisItemController.prepareCreate}" update=":DevisItemCreateForm" oncomplete="PF('DevisItemCreateDialog').show()"/>
+                                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":DevisItemEditForm" oncomplete="PF('DevisItemEditDialog').show()" disabled="#{empty devisItemController.selected}"/>
+                                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{devisController.deleteDevisItem(devisItemController.selected)}" update=":growl,:DevisItemListForm:datalist,:form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:montantDu,:form:remise" disabled="#{empty devisItemController.selected}"/>
+                                        </f:facet>
+                                    </p:dataTable> 
+                                </p:panel>
+                            </h:form>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-grid-row" style="margin-top: -15%; margin-left: 70%">
+                        <div class="ui-grid-col-6">
+                            <div class="ui-grid-row">
+                                <h:form id="form">
+                                    <p:panelGrid columns="2" style="width: 90% ;text-align: left">
+
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_sousTotal}" for="sousTotal" />
+                                        <p:inputText style=" font-weight: bold;color:black" id="sousTotal" value="#{devisController.selected.sousTotal} #{devisController.selected.devise}" title="#{bundle.CreateFactureTitle_sousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_remise}" for="remise" />
+
+                                        <p:inputText style=" font-weight: bold;color:brown" id="remise" value="#{devisController.selected.remise}" title="#{bundle.CreateFactureTitle_remise}" >
+                                            <p:ajax listener="#{devisController.calculerNouveauSousTotal()}" process="remise" event="keyup" update="montantDu, nouveauSousTotal"></p:ajax>
+                                        </p:inputText>   
+
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_nouveauSousTotal}" for="nouveauSousTotal" />
+                                        <p:inputText style=" font-weight: bold;color:black" id="nouveauSousTotal" value="#{devisController.selected.nouveauSousTotal} #{devisController.selected.devise}" title="#{bundle.CreateFactureTitle_nouveauSousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_totalTax}" for="totalTax" />
+                                        <p:inputText style=" font-weight: bold;color:red" id="totalTax" value="#{devisController.selected.totalTax} #{devisController.selected.devise}" title="#{bundle.CreateFactureTitle_totalTax}" disabled="true" readonly="true" />
+
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_montantDu}" for="montantDu" />
+                                        <p:inputText style=" font-weight: bold;color:green" id="montantDu" value="#{devisController.selected.montantDu}#{devisController.selected.devise}" title="#{bundle.CreateFactureTitle_montantDu}" disabled="true" readonly="true"/>
+
+
+                                    </p:panelGrid>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-6" style="width: 80%; margin: auto;margin-bottom: 5%;margin-top: 3%">
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <ui:include src="/devisItem/Create.xhtml"/>
+            <ui:include src="/devisItem/Edit.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFactureTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body" >
+
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <h:form id="PaiementListForm" >
+                            <p:panelGrid columns="2" rendered="#{paiementController.selected != null}" style="margin-top: 2%;width: 90%; margin: auto; margin-top: 2%">
+                                <p:outputLabel value="Client" for="client" />
+                                <p:selectOneMenu  style="width: 200px" id="client" value="#{factureController.client}" >
+                                    <f:selectItem id="null" value="#{null}"  itemLabel="---Select-----"/>
+                                    <f:selectItems value="#{clientController.list}"
+                                                   var="clientItem"
+                                                   itemValue="#{clientItem}"/>
+                                    <p:ajax listener="#{factureController.getFacturesRapport()}" event="change" update="datalist" ></p:ajax>
+
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                           
+ 
+
+                           
+                            
+                        </h:form>
+                    </div>
+
+
+
+
+
+
+     
+                </div>
+            </div>
+
+
+        </ui:define>
+    </ui:composition>
+
+</html>

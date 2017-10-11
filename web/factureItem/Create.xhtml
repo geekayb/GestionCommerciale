@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="FactureItemCreateDlg" widgetVar="FactureItemCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="Ajouter ligne de facture">
+            <h:form id="FactureItemCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{factureItemController.selected != null}" style="margin: auto">
+
+                        <p:outputLabel value="#{bundle.CreateFactureItemLabel_produit}" for="produit" />
+                        <p:selectOneMenu style="width: 150px" id="produit" value="#{factureController.factureItem.produit}" >
+                            <f:selectItem id="null" value="#{null}" itemLabel="---Select---" />
+                            <f:selectItems value="#{factureController.listProduitDeviseEdit}"
+                                           var="produitItem"
+                                           itemValue="#{produitItem}"
+
+                                           />
+                            <p:ajax listener="#{factureController.getQtePixByProduit}"  update="quantiteStock,prix,sousTotalHT,remise,quantite,tax" />
+
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel value="Quantité en stock" for="quantite" />
+                        <p:inputText disabled="true" id="quantiteStock" value="#{factureController.quantitStock}" title="#{bundle.CreateFactureItemTitle_quantite}" />
+                        <p:outputLabel value="Prix unitaire" for="quantite" />
+                        <p:inputText disabled="true" id="prix" value="#{factureController.factureItem.prixDevise=factureController.prix}" title="#{bundle.CreateFactureItemTitle_tax}" />
+
+
+
+                        <p:outputLabel value="#{bundle.CreateFactureItemLabel_quantite}" for="quantite" />
+                        <p:inputText id="quantite" value="#{factureController.factureItem.quantite}" title="#{bundle.CreateFactureItemTitle_quantite}" >
+                            <p:ajax listener="#{factureController.calculerSousTotal}" event="keyup" update="sousTotalHT">
+
+
+                            </p:ajax></p:inputText>
+                        <p:outputLabel value="#{bundle.CreateFactureItemLabel_tax}" for="tax" />
+                        <p:selectOneMenu id="tax" value="#{factureController.factureItem.tax}" >
+
+                            <f:selectItem  itemValue="0" itemLabel="0%" />
+                            <f:selectItem  itemValue="7" itemLabel="7%" />
+                            <f:selectItem  itemValue="10" itemLabel="10%" />                                                                     
+                            <f:selectItem  itemValue="20" itemLabel="20%" />
+                            <f:selectItem  itemValue="14" itemLabel="14%" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="#{bundle.CreateFactureItemLabel_remise}" for="remise" />
+                        <p:inputText id="remise" value="#{factureController.factureItem.remise}" title="#{bundle.CreateFactureItemTitle_remise}" >
+                            <p:ajax listener="#{factureController.calculerSousTotal}" event="keyup" update="sousTotalHT"></p:ajax>
+                        </p:inputText>
+                        <p:outputLabel value="Sous total (HT)" for="sousTotalHT" />
+                        <p:inputText disabled="true" id="sousTotalHT" value="#{factureController.factureItem.sousTotalHT}" title="#{bundle.CreateFactureItemTitle_sousTotalHT}" />
+
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{factureController.addItemToFactureEdit()}" value="Ajouter" update="display,:growl,:FactureItemListForm:datalist,:form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:totalAvecRemise,:form:montantPaye,:form:montantDu" oncomplete="handleSubmit(args,'FactureItemCreateDialog');"/>
+                    <p:commandButton value="Annuler" onclick="FactureItemCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

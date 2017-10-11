@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+        <ui:define name="body">
+
+            #{utilisateurController.selected=null}
+
+            <div id ="test" class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 90%;margin-top: 5%;margin-left: 5%; border: 2px solid gray; border-radius: 10px">
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <h:form id="UtilisateurCreateForm">
+                            <p:fieldset legend="Créer nouveau utilisateur" toggleable="true" style="width: 80%; margin: auto">
+
+                                <h:panelGroup id="display1" style="height: 100%; width: 100%">
+                                    <p:panelGrid columns="4" rendered="#{utilisateurController.selected != null}" style="width: 100%;">
+                                        <p:outputLabel styleClass="outputLabel" value="Profile *" for="profil" />
+                                        <p:selectOneMenu style="width: 60%" id="profil" value="#{utilisateurController.selected.profil}" >
+                                            <f:selectItem id="user0" itemValue="#{utilisateurController.userNull}" itemLabel="   ----SELECT----" ></f:selectItem> 
+                                            <f:selectItem id="user1" itemValue="Administrateur" itemLabel="Administrateur" ></f:selectItem> 
+                                            <f:selectItem id="user2" itemValue="Utilisateur" itemLabel="Utilisateur" ></f:selectItem> 
+                                            <p:ajax listener="#{utilisateurController.profileSelected}"  update="UtilisateurCreateForm"></p:ajax>
+
+                                        </p:selectOneMenu>
+                                        <p:outputLabel styleClass="outputLabel" value="Nom *" for="nom" />
+                                        <p:inputText style="width: 60%" id="nom" value="#{utilisateurController.selected.nom}" title="#{bundle.CreateUtilisateurTitle_nom}" />
+                                        <p:outputLabel styleClass="outputLabel" value="Prénom *" for="prenom" />
+                                        <p:inputText style="width: 60%" id="prenom" value="#{utilisateurController.selected.prenom}" title="#{bundle.CreateUtilisateurTitle_prenom}" />
+                                        <p:outputLabel styleClass="outputLabel" value="Email *" for="email" />
+                                        <p:inputText style="width: 60%" id="email" value="#{utilisateurController.email}" title="#{bundle.CreateUtilisateurTitle_email}" />
+
+                                        <p:outputLabel styleClass="outputLabel" value="Mot de passe *" for="password" />
+                                        <p:inputText style="width: 60%" type="password" id="password" value="#{utilisateurController.selected.password}" title="#{bundle.CreateUtilisateurTitle_password}" />
+                                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateUtilisateurLabel_telephone}" for="telephone" />
+                                        <p:inputText style="width: 60%" id="telephone" value="#{utilisateurController.selected.telephone}" title="#{bundle.CreateUtilisateurTitle_telephone}" />
+                                        <p:outputLabel styleClass="outputLabel" value="Fonction" for="fonction" />
+                                        <p:inputText style="width: 60%" id="fonction" value="#{utilisateurController.selected.fonction}" title="#{bundle.CreateUtilisateurTitle_fonction}" />
+
+                                    </p:panelGrid>
+
+                                </h:panelGroup>
+                            </p:fieldset>
+                            <p:spacer></p:spacer>
+                            <p:spacer></p:spacer>
+                            <p:spacer></p:spacer>
+                            <p:spacer></p:spacer>
+                            <p:spacer></p:spacer>
+
+                            <p:fieldset id ="fieldset1" legend="Autorisation" toggleable="false" style="width: 80%; margin: auto" rendered="#{utilisateurController.isUser==true}">
+                                <h:panelGroup id="display2" style="height: 100%; width: 100%">
+                                    <p:panelGrid columns="4"  style="width: 100%;">
+                                        <p:outputLabel styleClass="outputLabel" value="Gérer les clients"  />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.gererClients}" />
+
+                                        <p:outputLabel styleClass="outputLabel" value="Gérer le catalogue" />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.gererCatalogue}" /> 
+
+                                        <p:outputLabel styleClass="outputLabel" value="Gérer les fournisseurs"  />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.gererFournisseur}" />
+
+                                        <p:outputLabel styleClass="outputLabel" value="Gérer les données(Factures, Devis...)" />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.gererDonnees}" /> 
+
+                                        <p:outputLabel styleClass="outputLabel" value="Gérer les utilisateurs"  />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.gererUsers}" /> 
+
+                                        <p:outputLabel styleClass="outputLabel" value="Impression des documents"  />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.impression}" /> 
+                                        
+                                        <p:outputLabel styleClass="outputLabel" value="Gérer les paramètres"  />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.gererParametre}" /> 
+                                        
+                                        <p:outputLabel styleClass="outputLabel" value="Payer les factures"  />
+                                        <p:selectBooleanCheckbox value="#{utilisateurController.selected.payerFacture}" /> 
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                            </p:fieldset>
+                            <p:commandButton style="margin-left: 10%" actionListener="#{utilisateurController.create}" update=":growl" value="Enregistrer"/>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

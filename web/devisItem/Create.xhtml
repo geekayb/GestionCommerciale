@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DevisItemCreateDlg" widgetVar="DevisItemCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateDevisItemTitle}">
+            <h:form id="DevisItemCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{devisItemController.selected != null}" style="margin: auto">
+
+                        <p:outputLabel value="#{bundle.CreateDevisItemLabel_produit}" for="produit" />
+                        <p:selectOneMenu id="produit" value="#{devisController.devisItem.produit}" >
+                            <f:selectItem id="null" value="#{null}" itemLabel="---Select---" />
+                            <f:selectItems value="#{devisController.listProduitDeviseEdit}"
+                                           var="produitItem"
+                                           itemValue="#{produitItem}"
+
+                                           />
+                            <p:ajax listener="#{devisController.getQtePixByProduit}"  update="quantiteStock,prix,sousTotalHT,remise,quantite,tax" />
+
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel value="Quantité en stock" for="quantite" />
+                        <p:inputText disabled="true" id="quantiteStock" value="#{devisController.quantitStock}" title="#{bundle.CreateDevisItemTitle_quantite}" />
+                        <p:outputLabel value="Prix unitaire" for="quantite" />
+                        <p:inputText disabled="true" id="prix" value="#{devisController.prix}" title="#{bundle.CreateDevisItemTitle_tax}" />
+
+
+
+                        <p:outputLabel value="#{bundle.CreateDevisItemLabel_quantite}" for="quantite" />
+                        <p:inputText id="quantite" value="#{devisController.devisItem.quantite}" title="#{bundle.CreateDevisItemTitle_quantite}" >
+                            <p:ajax listener="#{devisController.calculerSousTotal}" event="keyup" update="sousTotalHT">
+
+
+                            </p:ajax></p:inputText>
+                        <p:outputLabel value="#{bundle.CreateDevisItemLabel_tax}" for="tax" />
+                        <p:selectOneMenu id="tax" value="#{devisController.devisItem.tax}" >
+
+                             <f:selectItem  itemValue="0" itemLabel="0%" />
+                            <f:selectItem  itemValue="7" itemLabel="7%" />
+                            <f:selectItem  itemValue="10" itemLabel="10%" />                                                                     
+                            <f:selectItem  itemValue="20" itemLabel="20%" />
+                            <f:selectItem  itemValue="14" itemLabel="14%" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="#{bundle.CreateDevisItemLabel_remise}" for="remise" />
+                        <p:inputText id="remise" value="#{devisController.devisItem.remise}" title="#{bundle.CreateDevisItemTitle_remise}" >
+                            <p:ajax listener="#{devisController.calculerSousTotal}" event="keyup" update="sousTotalHT"></p:ajax>
+                        </p:inputText>
+                        <p:outputLabel value="Sous total (HT)" for="sousTotalHT" />
+                        <p:inputText disabled="true" id="sousTotalHT" value="#{devisController.devisItem.sousTotalHT}" title="#{bundle.CreateDevisItemTitle_sousTotalHT}" />
+
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{devisController.addItemToDevisEdit()}" value="Ajouter" update="display,:growl,:DevisItemListForm:datalist,:form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:montantDu" oncomplete="handleSubmit(args,'DevisItemCreateDialog');"/>
+                    <p:commandButton value="Annuler" onclick="DevisItemCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

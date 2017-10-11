@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+        <ui:define name="body">
+
+
+            <!--vider la facture-->
+            #{factureController.selected=null}
+            #{factureController.factureItems.clear()}
+
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 250%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 85%; margin: auto; border: 2px solid gray; border-radius: 10px">
+                    <div class="ui-grid-row" style="width: 95%; margin: auto">
+                        <div class="ui-grid-col-12">
+                            <h:form id="FactureCreateForm">
+
+                                <p:commandButton actionListener="#{clientController.prepareCreate()}" icon="ui-icon-plus" value="Nouveau client" update=":growl" style="margin-left: 2%; margin-bottom: 1%" oncomplete="PF('ClientCreateDialog').show()"/>
+                                <p:commandButton actionListener="#{factureController.enregisterFacture()}" icon="ui-icon-ok-2" value="Enregistrer" update=":growl" style="margin-left: 58%; margin-bottom: 1%" />
+                                <p:commandButton actionListener="#{factureController.AnnulerFacture()}" id="returnButton" icon="ui-icon-cancel" value="Annuler"></p:commandButton>
+
+                                <p:fieldset legend="Infos facture" toggleable="true" >
+                                    <h:panelGroup id="display" style="height: 100%">
+                                        <p:panelGrid columns="6" rendered="#{factureController.selected != null}" style="margin: auto">
+                                            <p:outputLabel value="#{bundle.CreateFactureLabel_client}" for="client" />
+                                            <p:selectOneMenu  id="client" value="#{factureController.selected.client}" >
+                                                <f:selectItem id="null" value="#{null}"  itemLabel="---Select-----"/>
+                                                <f:selectItems value="#{clientController.list}"
+                                                               var="clientItem"
+                                                               itemValue="#{clientItem}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Date facture" for="date" />
+                                            <p:calendar id="date" pattern="dd/MM/yyyy" value="#{factureController.selected.dateFacture}" title="Date facture"  showOn="button"/>
+
+                                            <p:outputLabel value="Date d'écheance" for="dateEcheance" />
+                                            <p:calendar id="dateEcheance" pattern="dd/MM/yyyy" value="#{factureController.selected.dateEcheance}" title="Date d'écheance"  showOn="button"/>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+
+
+                                    <h:panelGroup id="display2" style="height: 100%">
+                                        <p:panelGrid columns="4" rendered="#{factureController.selected != null}" style=" margin: auto">
+                                            <p:outputLabel value="Devise" for="devise" />
+                                            <p:selectOneMenu style="width: 200px" id="devise" value="#{factureController.selected.devise}" >
+                                                
+                                                 <f:selectItem  itemValue="" itemLabel="------Select-------" />                   
+                                                 <f:selectItem  itemValue="Dhs" itemLabel="Dirham marocain (DH)" />                   
+                                                <f:selectItem  itemValue="$" itemLabel="Dollar américain (USD)" />
+                                                <f:selectItem  itemValue="€" itemLabel="Euro (EUR)" />
+                                                                                                 
+                                              
+                                                
+                                                <p:ajax listener="#{factureController.getProduitByDevise()}"  update=":FactureItemCreateForm1:produit,:FactureItemCreateForm1:quantiteStock,:FactureItemCreateForm1:prix" />
+
+
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Condition de la facture" for="conditionFacture" />
+                                            <p:inputTextarea id= "conditionFacture" cols="58" rows="2" value="#{factureController.selected.conditionFacture}"  />
+
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <p style="margin-left: 30%">NB: Il faut choisir un devise pour ajouter les lignes de factures</p>
+                                </p:fieldset>
+                            </h:form>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="ui-grid-row" style="margin-top: 3%">
+                        <div class="ui-grid-col-12">
+                            <div class="ui-grid-row" style="width: 95%; margin: auto">
+
+                                <h:form id="FactureItemCreateForm1">
+                                    <p:panel header="Ajouter articles à partir des produits" >
+
+                                        <h:panelGroup id="display">
+
+                                            <p:panelGrid columns="8" rendered="#{factureItemController.selected != null}" style="margin: auto">
+
+                                                <p:outputLabel value="#{bundle.CreateFactureItemLabel_produit}" for="produit" />
+                                                <p:selectOneMenu id="produit" style="width: 150px" value="#{factureController.factureItem.produit}" >
+                                                    <f:selectItem id="null" value="#{null}" itemLabel="---Select---" />
+                                                    <f:selectItems value="#{factureController.listProduitDevise}"
+                                                                   var="produitItem"
+                                                                   itemValue="#{produitItem}"
+
+                                                                   />
+                                                    <p:ajax listener="#{factureController.getQtePixByProduit}"  update="quantiteStock,prix,sousTotalHT,remise,quantite,tax" />
+
+                                                </p:selectOneMenu>
+
+
+                                                <p:outputLabel value="Quantité en stock" for="quantiteStock" />
+                                                <p:inputText disabled="true" id="quantiteStock" value="#{factureController.quantitStock}" title="#{bundle.CreateFactureItemTitle_quantite}" />
+                                                <p:outputLabel value="prix" for="prix" />
+                                                <p:inputText disabled="true" id="prix" value="#{factureController.factureItem.prixDevise=factureController.prix} " title="#{bundle.CreateFactureItemTitle_tax}" />
+
+
+
+                                                <p:outputLabel value="#{bundle.CreateFactureItemLabel_quantite}" for="quantite" />
+                                                <p:inputText id="quantite" value="#{factureController.factureItem.quantite}" title="#{bundle.CreateFactureItemTitle_quantite}" >
+                                                    <p:ajax listener="#{factureController.calculerSousTotal}" event="keyup" update="sousTotalHT">
+
+
+                                                    </p:ajax></p:inputText>
+                                                <p:outputLabel value="TVA %" for="tax" />
+                                                <p:selectOneMenu style="width: 150px" id="tax" value="#{factureController.factureItem.tax}" >
+                                                    <f:selectItem  itemValue="0" itemLabel="0%" />
+                                                    <f:selectItem  itemValue="7" itemLabel="7%" />
+                                                    <f:selectItem  itemValue="10" itemLabel="10%" />                                                                     
+                                                    <f:selectItem  itemValue="20" itemLabel="20%" />
+                                                    <f:selectItem  itemValue="14" itemLabel="14%" />
+
+
+                                                </p:selectOneMenu>
+
+                                                <p:outputLabel value="#{bundle.CreateFactureItemLabel_remise}" for="remise" />
+                                                <p:inputText id="remise" value="#{factureController.factureItem.remise}" title="#{bundle.CreateFactureItemTitle_remise}" >
+                                                    <p:ajax listener="#{factureController.calculerSousTotal}" event="keyup" update="sousTotalHT"></p:ajax>
+                                                </p:inputText>
+                                                <p:outputLabel value="Sous total (HT)" for="sousTotalHT" />
+                                                <p:inputText disabled="true" id="sousTotalHT" value="#{factureController.factureItem.sousTotalHT}" title="#{bundle.CreateFactureItemTitle_sousTotalHT}" />
+
+                                            </p:panelGrid>
+                                            <p:commandButton actionListener="#{factureController.addToFacture()}" value="Ajouter" 
+                                                             update="display,:growl,:FactureItemCreateForm1, 
+                                                             :ItemListeForm:datalist
+                                                             :form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:totalAvecRemise,:form:montantPaye,:form:montantDu
+                                                             "
+                                                             />
+
+                                        </h:panelGroup>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="ui-grid-row" style="margin-top: 3%">
+                        <div class="ui-grid-col-12">
+                            <div class="ui-grid-row" style="width: 95%; margin: auto">
+
+                                <h:form id="FactureItemCreateForm2">
+                                    #{factureController.factureItem.produit = factureController.p}
+                                    <p:panel header="Ajouter service" >
+
+
+
+                                        <h:panelGroup id="display">
+
+                                            <p:panelGrid columns="8" rendered="#{factureItemController.selected != null}" style="margin: auto">
+                                                <p:outputLabel value="Réference" for="ref" />
+                                                <p:inputText id="ref" value="#{factureController.factureItem2.produit.reference}" />
+                                                <p:outputLabel value="#{bundle.CreateFactureItemLabel_produit}" for="produit" />
+                                                <p:inputText id="produit" value="#{factureController.factureItem2.produit.libelle}" />
+                                                <p:outputLabel value="Desciption" for="desciption" />
+                                                <p:inputTextarea id="desciption" cols="28" rows="2" value="#{factureController.factureItem2.produit.description}" /> 
+                                                <p:outputLabel value="TVA %" for="tax" />
+                                                <p:selectOneMenu style="width: 120px" id="tax" value="#{factureController.factureItem2.tax}" >
+
+                                                    <f:selectItem  itemValue="0" itemLabel="0%" />
+                                                    <f:selectItem  itemValue="7" itemLabel="7%" />
+                                                    <f:selectItem  itemValue="10" itemLabel="10%" />                                                                     
+                                                    <f:selectItem  itemValue="20" itemLabel="20%" />
+                                                    <f:selectItem  itemValue="14" itemLabel="14%" />
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="#{bundle.CreateFactureItemLabel_quantite}" for="quantite" />
+                                                <p:inputText id="quantite" value="#{factureController.factureItem2.quantite}" title="#{bundle.CreateFactureItemTitle_quantite}" >
+                                                    <p:ajax listener="#{factureController.calculerSousTotal}" event="keyup" update="sousTotalHT">
+                                                    </p:ajax></p:inputText> 
+                                                <p:outputLabel value="Prix unitaire" for="prix" />
+                                                <p:inputText  id="prix" value="#{factureController.factureItem2.prixDevise}" title="#{bundle.CreateFactureItemTitle_tax}" >
+                                                    <p:ajax listener="#{factureController.calculerSousTotalService()}" event="keyup" update="sousTotalHT">
+                                                    </p:ajax></p:inputText> 
+                                                <p:outputLabel value="#{bundle.CreateFactureItemLabel_remise}" for="remise" />
+                                                <p:inputText id="remise" value="#{factureController.factureItem2.remise}" title="#{bundle.CreateFactureItemTitle_remise}" >
+                                                    <p:ajax listener="#{factureController.calculerSousTotalService()}" event="keyup" update="sousTotalHT"></p:ajax>
+                                                </p:inputText>
+                                                <p:outputLabel value="Sous total (HT)" for="sousTotalHT" />
+                                               <p:inputText disabled="true" id="sousTotalHT" value="#{factureController.factureItem2.sousTotalHT}" title="#{bundle.CreateFactureItemTitle_sousTotalHT}" />
+
+                                            </p:panelGrid>
+                                            <p:commandButton actionListener="#{factureController.addServiceToFacture()}" value="Ajouter" 
+                                                             update="display,:growl,:FactureItemCreateForm2, 
+                                                             :ItemListeForm:datalist
+                                                             :form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:totalAvecRemise,:form:montantPaye,:form:montantDu
+                                                             "
+                                                             />
+                                        </h:panelGroup>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="ui-grid-row" style="margin-top: 3%">
+                        <div class="ui-grid-col-6">
+                            <div class="ui-grid-row" style="width: 90%; margin: auto">
+
+                                <h:form id="ItemListeForm">
+                                    <p:panel header="Lignes de facture" >
+
+
+
+                                        <p:dataTable id = "datalist" value="#{factureController.factureItems}" var="item" style="width: 90%; margin: auto">
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Réference"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.produit.reference}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Produit"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.produit.libelle}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Quantite"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.quantite}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Prix Unitaire"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.prixDevise}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Taux TVA"/>
+                                                </f:facet>
+                                                <h:outputText value="#{factureController.taxToString(item.tax)}"/>
+                                            </p:column>
+
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Remise"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.remise}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Sous total (HT)"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.sousTotalHT}"/>
+                                            </p:column>
+
+                                        </p:dataTable>
+                                    </p:panel>
+                                </h:form>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="ui-grid-row" style="margin-top: 3%; margin-left: 58%;margin-bottom: 0%">
+                        <div class="ui-grid-col-6">
+                            <div class="ui-grid-row">
+                                <h:form id="form">
+                                    <p:panelGrid columns="2" style="width: 90% ;text-align: left">
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_sousTotal} " for="sousTotal" />
+                                        <p:inputText style=" font-weight: bold" id="sousTotal" value="#{factureController.selected.sousTotal}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_sousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_totalTax}" for="totalTax" />
+                                        <p:inputText style=" font-weight: bold" id="totalTax" value="#{factureController.selected.totalTax}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_totalTax}" disabled="true" readonly="true" />
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_nouveauSousTotal}" for="nouveauSousTotal" />
+                                        <p:inputText style="font-weight: bold" id="nouveauSousTotal" value="#{factureController.selected.nouveauSousTotal}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_nouveauSousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_remise}" for="remise" />
+                                        <p:inputText style=" font-weight: bold" id="remise" value="#{factureController.selected.remise}" title="#{bundle.CreateFactureTitle_remise}" >
+                                            <p:ajax listener="#{factureController.calculerMontantDu()}" process="remise" event="keyup" update="totalAvecRemise,montantDu"></p:ajax>
+                                        </p:inputText>   
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_totalAvecRemise}" for="totalAvecRemise" />
+                                        <p:inputText style=" font-weight: bold" id="totalAvecRemise" value="#{factureController.selected.totalAvecRemise}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_totalAvecRemise}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_montantPaye}" for="montantPaye" />
+                                        <p:inputText style="font-weight: bold" id="montantPaye" value="#{factureController.selected.montantPaye}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_montantPaye}" disabled="true"  readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_montantDu}" for="montantDu" />
+                                        <p:inputText style=" font-weight: bold" id="montantDu" value="#{factureController.selected.montantDu}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_montantDu}" disabled="true" readonly="true"/>
+
+
+                                    </p:panelGrid>
+
+
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-6" style="width: 80%; margin: auto;margin-bottom: 5%;margin-top: 2%">
+
+                        </div>
+                    </div>
+
+
+                </div></div>
+
+            <ui:include src="/client/popupClient.xhtml"/>
+        </ui:define>
+
+    </ui:composition>
+</html>

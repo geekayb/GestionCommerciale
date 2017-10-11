@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="ClientCreateDlg" widgetVar="ClientCreateDialog" width="40%" modal="true" resizable="false" appendTo="@(body)" header="Nouveau client">
+            <h:form id="ClientCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{clientController.selected != null}" style="width: 80%;margin: auto">
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_raisonSociale}" for="raisonSociale" />
+                        <p:inputText styleClass="inputText" id="raisonSociale" value="#{clientController.selected.raisonSociale}" title="#{bundle.CreateClientTitle_raisonSociale}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_adresse}" for="adresse" />
+                        <p:inputText styleClass="inputText" id="adresse" value="#{clientController.selected.adresse}" title="#{bundle.CreateClientTitle_adresse}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_codePostale}" for="codePostale" />
+                        <p:inputText styleClass="inputText" id="codePostale" value="#{clientController.selected.codePostale}" title="#{bundle.CreateClientTitle_codePostale}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_ville}" for="ville" />
+                        <p:inputText styleClass="inputText" id="ville" value="#{clientController.selected.ville}" title="#{bundle.CreateClientTitle_ville}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_telephone}" for="telephone" />
+                        <p:inputText styleClass="inputText" id="telephone" value="#{clientController.selected.telephone}" title="#{bundle.CreateClientTitle_telephone}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_fax}" for="fax" />
+                        <p:inputText styleClass="inputText" id="fax" value="#{clientController.selected.fax}" title="#{bundle.CreateClientTitle_fax}" />
+                        <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_email}" for="email" />
+                        <p:inputText styleClass="inputText" id="email" value="#{clientController.selected.email}" title="#{bundle.CreateClientTitle_email}" />
+
+                    </p:panelGrid>
+                    <p:commandButton styleClass="butonAp" actionListener="#{clientController.saveClientPopup()}" value="#{bundle.Save}" update="display,:growl"/>
+                    <p:commandButton styleClass="butonPay" actionListener="#{clientController.reinitialiser()}" value="#{bundle.ReinitaliserForm}" update="display,:growl"/>
+                    <p:commandButton styleClass="butonMod" value="Annuler" onclick="ClientCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

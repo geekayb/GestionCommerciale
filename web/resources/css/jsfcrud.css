@@ -1,0 +1,84 @@
+.ui-widget {
+    font-size: 12.5px !important;
+}
+.ui-layout-north {
+    z-index: 20 !important;
+    overflow: visible !important;;
+}
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+.ui-widget-header {
+    text-align: center;
+    text-transform: uppercase;
+}
+.ui-button {
+    margin-top: 15px !important;
+    font-size: 14px !important;
+    
+}
+.inputText{
+
+    width: 75%;
+    height: 100%;
+    
+   .ui-dialog-content{ 
+    max-width: 950px !important; 
+    max-height: 700px !important;
+    margin-bottom: 5px !important;
+}     
+       
+}
+
+.butonAp{
+     font-size: 12px !important;
+     color: orange !important;
+     background-color: green !important;
+}
+.butonPay{
+     font-size: 12px !important;
+     color: black !important;
+     background-color: green !important;
+}
+.butonMod{
+     font-size: 12px !important;
+     color: yellow !important;
+     background-color: green !important;
+}
+.butonPDF{
+     font-size: 12px !important;
+     color: Red !important;
+     background-color: green !important;
+}
+.outputLabel{
+    padding-left: 1%;
+    font-size: 30%;
+    color: orange;
+    
+}
+
+.buttonSave{
+    margin-left: 2%;
+    height: 20%;
+    background-color: greenyellow !important;
+    
+}
+
+/****************************************/
+
+
+.buttonAjouter{
+    background-color: #7dd65a;
+}
+
+ .pf-dashboard-column {width:10000px !important;}
+ 
+ .pf-dashboard-columnp:nth-child(1) {
+  width: 400px;
+}
+
+.panelGrid{
+    font-size: 20px;
+    height: 100% !important;
+    margin-left: 10%; height: 100% ; width: 20%;
+}

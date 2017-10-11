@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="LivraisonItemViewDlg" widgetVar="LivraisonItemViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewLivraisonItemTitle}">
+            <h:form id="LivraisonItemViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{livraisonItemController.selected != null}">
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_id}"/>
+                        <h:outputText value="#{livraisonItemController.selected.id}" title="#{bundle.ViewLivraisonItemTitle_id}"/>
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_quantite}"/>
+                        <h:outputText value="#{livraisonItemController.selected.quantite}" title="#{bundle.ViewLivraisonItemTitle_quantite}"/>
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_tax}"/>
+                        <h:outputText value="#{livraisonItemController.selected.tax}" title="#{bundle.ViewLivraisonItemTitle_tax}"/>
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_sousTotalHT}"/>
+                        <h:outputText value="#{livraisonItemController.selected.sousTotalHT}" title="#{bundle.ViewLivraisonItemTitle_sousTotalHT}"/>
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_remise}"/>
+                        <h:outputText value="#{livraisonItemController.selected.remise}" title="#{bundle.ViewLivraisonItemTitle_remise}"/>
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_produit}"/>
+                        <h:outputText value="#{livraisonItemController.selected.produit}" title="#{bundle.ViewLivraisonItemTitle_produit}"/>
+                        <h:outputText value="#{bundle.ViewLivraisonItemLabel_livraison}"/>
+                        <h:outputText value="#{livraisonItemController.selected.livraison}" title="#{bundle.ViewLivraisonItemTitle_livraison}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="LivraisonItemViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

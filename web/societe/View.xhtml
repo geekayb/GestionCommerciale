@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="SocieteViewDlg" widgetVar="SocieteViewDialog" modal="true" resizable="false" appendTo="@(body)" header="Voir société">
+            <p:scrollPanel style="width: 1100px;height:50%;margin: auto">  
+                <h:form id="SocieteViewForm" style="background-color: white">
+                    <h:panelGroup id="display">
+                        <h:panelGroup id="display2">
+                            <div class="ui-grid ui-grid-responsive">
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-12" style="padding: 10px">
+
+                                        <u style="color: #4582b6"> <h1 style="margin-left: 1%;color: #4582b6"> <h:outputText value="Société "/>
+                                                <h:outputText   id="raisonSociale" value="#{societeController.selected.raisonSociale}" />
+
+                                            </h1> 
+                                        </u>
+
+                                        <p:graphicImage style="width: 200px; height: 150px;position: absolute; left:70%; top:2%; font-size: 40px; margin-right: 5%;" value="/societe/?file=#{societeController.logoItem(societeController.selected)}"/>
+
+                                        <div class="ui-grid-col-6" style="border: 4px solid orange;border-radius: 10px; 
+                                             background-color: white; width: max-content; padding-left:  30px;padding-right: 30px;color:#428bca; height: max-content;
+                                             position: absolute; left:60%; top:35%; font-size: 40px; margin-right: 5%;
+                                             text-align: center">Société #{societeController.droit()}</div>
+
+                                        <br></br>
+                                        <h:panelGrid columns="4" cellpadding="10" style="font-size: 15px">
+                                            <h:outputText style="font-size: 15px; color: orange;" value="Adresse:  "/>
+                                            <h:outputText style="font-size: 15px;color: #428bca" value="#{societeController.selected.adresse}"/>
+                                            <h:outputText style="color: orange" value="Email:  "/>
+                                            <h:outputText style="color: #428bca" value="#{societeController.selected.email}"/>
+
+                                            <h:outputText style="color: orange" value="Tél:  "/>
+                                            <h:outputText style="color: #428bca" value="#{societeController.selected.telephone}"/>
+
+                                            <h:outputText style="color: orange" value="Site web:  "/>  
+                                            <h:outputText style="color: #428bca" value="#{societeController.selected.siteWeb}"/>
+
+
+                                            <h:outputText style="color: orange" value="Pays:  "/>
+                                            <h:outputText style="color: #428bca" value="#{societeController.selected.pays}"/>
+
+                                            <h:outputText  style="color: orange" value="Ville:  "/>
+                                            <h:outputText style="color: #428bca" value="#{societeController.selected.ville}"/>
+
+                                            <h:outputText style="color: orange" value="Site web:  "/>  
+                                            <h:outputText style="color: #428bca" value="#{societeController.selected.siteWeb}"/>
+
+
+                                        </h:panelGrid>
+                                        <hr style="color:#4582b6"></hr>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui-grid ui-grid-responsive">
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-12" style="padding: 10px">
+                                        <p:panel header="Nombre de factures" style="margin-left: 2%; width: 22%;  text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                            <h1 style="color: #abaa01;font-size: 20px"> #{societeController.numberFacture} factures</h1>
+                                            <br></br>
+                                        </p:panel>
+                                        <p:panel header="Nombre de deviss" style="margin-left: 2%;width: 22%;  text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                            <h1 style="color: #846d74;font-size: 20px"> #{societeController.numberDevis} deviss</h1>
+                                            <br></br>
+                                        </p:panel>
+                                        <p:panel header="Nombre de livraisons" style="margin-left: 2%;width: 23%;  text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                            <h1 style="color: #595f63;font-size: 20px"> #{societeController.numberLivraison} livraisons</h1>
+                                            <br></br>
+                                        </p:panel>
+                                        <p:panel header="Nombre de commandes" style="margin-left: 2%; width: 22%;  text-align: center;  font-weight: bold;font-size: 20px; margin-top: 3%;display: inline-block">
+                                            <h1 style="color: #428bca;font-size: 20px"> #{societeController.numberCommande} commandes</h1>
+                                            <br></br>
+                                        </p:panel>
+                                    </div>
+                                </div>
+                            </div>
+                            <p:commandButton value="#{bundle.Close}" onclick="SocieteViewDialog.hide()"/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
+            </p:scrollPanel>
+        </p:dialog>
+
+    </ui:composition>
+</html>

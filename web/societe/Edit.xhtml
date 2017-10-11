@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 95%; margin: auto; border: 2px solid gray; border-radius: 10px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <h:form id="SocieteEditForm">
+                                <p:commandButton actionListener="#{utilisateurController.updateSociete()}" value="#{bundle.Save}" update="display1,display2,display3,display4,:growl" style="margin-left: 85%"/>
+
+                                <p:fieldset id="edit1" legend="Informations générales :" style="width: 90%; margin: auto" toggleable="true" >
+                                    <h:panelGroup id="display1" >
+                                        <p:panelGrid columns="4" rendered="#{societeController.selected != null}" style="width: 90%; margin: auto">
+
+
+                                            <p:outputLabel value="Raison sociale*" for="raisonSociale" />
+                                            <p:inputText id="raisonSociale" value="#{utilisateurController.connectedUser.societe.raisonSociale}" title="Raison sociale" />
+                                            <p:outputLabel value="Statut juridique*" for="statutJuridique" />
+                                            <p:selectOneMenu style="width: 50%" id="statutJuridique" value="#{utilisateurController.connectedUser.societe.statutJuridique}" >
+                                                <f:selectItem id="form0" value="#{null}" itemLabel="   ----SELECT----" ></f:selectItem>                             
+
+                                                <f:selectItems value="#{societeController.listeForme}"
+                                                               var="formeJuridiqueItem"
+                                                               itemValue="#{formeJuridiqueItem}"/>
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel value="Secteur d'activité" for="secteurActivite" />
+                                            <p:inputText id="secteurActivite" value="#{utilisateurController.connectedUser.societe.secteurActivite}" title="Secteur d'activité" />
+                                            <p:outputLabel value="Activité principale" for="activitePrincipale" />
+                                            <p:inputText id="activitePrincipale" value="#{utilisateurController.connectedUser.societe.activitePrincipale}" title="Activité principale" />
+                                            <p:outputLabel value="Date de création" for="dateCreation" />
+                                            <p:inputText id="dateCreation" value="#{utilisateurController.connectedUser.societe.dateCreation}" title="Date de création" />
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                </p:fieldset>
+                                <p:spacer></p:spacer>
+                                <p:spacer></p:spacer>
+                                <p:spacer></p:spacer>
+                                <p:fieldset id="edit2" legend="Adresse de l'entreprise:"  style="width: 90%; margin: auto" toggleable="true">
+                                    <h:panelGroup id="display2" >
+                                        <p:panelGrid columns="4" rendered="#{societeController.selected != null}" style="width: 90%; margin: auto">
+                                            <p:outputLabel value="Adresse*" for="adresse" />
+                                            <p:inputText size="40" id="adresse" value="#{utilisateurController.connectedUser.societe.adresse}" title="Adresse" />
+                                            <p:outputLabel value="Code postale*" for="codePostale" />
+                                            <p:inputText id="codePostale" value="#{utilisateurController.connectedUser.societe.codePostale}" title="Code postale" />
+                                            <p:outputLabel value="Pays*" for="pays" />
+                                            <p:selectOneMenu style="width: 50%" id="pays" value="#{utilisateurController.connectedUser.societe.pays}" >
+                                                <f:selectItem id="pays0" value="#{null}" itemLabel="   ----SELECT----" ></f:selectItem> 
+                                                <f:selectItems value="#{societeController.listePays}"
+                                                               var="paysItem"
+                                                               itemValue="#{paysItem}"/>
+                                            </p:selectOneMenu>
+
+
+
+                                            <p:outputLabel value="Ville*" for="ville" />
+                                            <p:inputText id="ville" value="#{utilisateurController.connectedUser.societe.ville}" title="Ville" />
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                </p:fieldset>
+                                <p:spacer></p:spacer>
+                                <p:spacer></p:spacer>
+                                <p:spacer></p:spacer>
+                                <p:fieldset id="edit3" legend="Coordonnées :" style="width: 90%; margin: auto" toggleable="true">
+                                    <h:panelGroup id="display3" >
+                                        <p:panelGrid columns="4" rendered="#{societeController.selected != null}" style="width: 90%; margin: auto">
+                                            <p:outputLabel value="Email*" for="email" />
+                                            <p:inputText id="email" value="#{utilisateurController.connectedUser.societe.email}" title="Email" />
+                                            <p:outputLabel value="Télephone*" for="telephone" />
+                                            <p:inputText id="telephone" value="#{utilisateurController.connectedUser.societe.telephone}" title="Télephone" />
+                                            <p:outputLabel value="Mobile" for="mobile" />
+                                            <p:inputText id="mobile" value="#{utilisateurController.connectedUser.societe.mobile}" title="Mobile" />
+                                            <p:outputLabel value="Fax*" for="fax" />
+                                            <p:inputText id="fax" value="#{utilisateurController.connectedUser.societe.fax}" title="Fax" />
+                                            <p:outputLabel value="Site web" for="siteWeb" />
+                                            <p:inputText id="siteWeb" value="#{utilisateurController.connectedUser.societe.siteWeb}" title="Site web" />
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                </p:fieldset>
+                                <p:spacer></p:spacer>
+                                <p:spacer></p:spacer>
+                                <p:spacer></p:spacer>
+                                <p:fieldset id="edit4" legend="Informations administratives :" style="width: 90%; margin: auto" toggleable="true">
+                                    <h:panelGroup id="display4" >
+                                        <p:panelGrid columns="4" rendered="#{societeController.selected != null}" style="width: 90%; margin: auto">
+                                           
+                                            <p:outputLabel value="RC*" for="RC" />
+                                            <p:inputText id="RC" value="#{utilisateurController.connectedUser.societe.RC}" title="RC" />
+                                            <p:outputLabel value="IF*" for="numeroIF" />
+                                            <p:inputText id="numeroIF" value="#{utilisateurController.connectedUser.societe.numeroIF}" title="IF" />
+                                            <p:outputLabel value="TP*" for="TP" />
+                                            <p:inputText id="TP" value="#{utilisateurController.connectedUser.societe.TP}" title="TP" />
+                                            <p:outputLabel value="ICE*" for="ICE" />
+                                            <p:inputText id="ICE" value="#{utilisateurController.connectedUser.societe.ICE}" title="ICE" />
+                                            <p:outputLabel value="CNSS" for="CNSS" />
+                                            <p:inputText id="CNSS" value="#{utilisateurController.connectedUser.societe.CNSS}" title="CNSS" />
+                                            <p:outputLabel value="Capitale sociale" for="capitaleSociale" />
+                                            <p:inputText id="capitaleSociale" value="#{utilisateurController.connectedUser.societe.capitaleSociale}" title="Capitale sociale" />
+                                            <p:outputLabel value="N° compte banquaire" for="numeroCompteBancaire" />
+                                            <p:inputText id="numeroCompteBancaire" value="#{utilisateurController.connectedUser.societe.numeroCompteBancaire}" title="N° compte banquaire" />
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                     </p:fieldset>
+                                     </h:form>
+                            <h:form>
+                                    <h:panelGroup id="display5" style="margin-top: 5%">
+                                        <p:panelGrid columns="3" rendered="#{societeController.selected != null}" style="width: 90%; margin: auto">
+
+                                            <p:outputLabel value="Logo*" for="logo" />
+                                            <p:fileUpload id="logo" fileUploadListener="#{societeController.upload}" mode="advanced" dragDropSupport="true"
+                                                          multiple="false" update="messages" sizeLimit="100000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" >
+                                            </p:fileUpload>
+                                            <p:graphicImage id="image" style="width: 200px;height: 150px; font-size: 40px; margin-right: 5%;" value="/societe/?file=#{societeController.findPath()}" />
+                                              
+                    
+
+                                            <p:growl id="messages" showDetail="true" />
+
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                               
+                                     </h:form> 
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</html>
+
+
+

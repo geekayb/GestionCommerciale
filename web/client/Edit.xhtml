@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%" >
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 70%; margin-top: 7%;margin-left: 15%; border: 1px double gray; border-radius: 0px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+
+                            <p:fieldset id="create" legend="Modifier le client" style="width: 90%; margin: auto">
+                                <h:form id="ClientCreateForm"  >
+                                    <h:panelGroup id="display" style="height: 100%">
+                                        <p:panelGrid columns="2" rendered="#{clientController.selected != null}" style="width: 100%;background-color: white" columnClasses="">
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_raisonSociale}" for="raisonSociale" />
+                                            <p:inputText styleClass="inputText" id="raisonSociale" value="#{clientController.selected.raisonSociale}" title="#{bundle.CreateClientTitle_raisonSociale}" />
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_adresse}" for="adresse" />
+                                            <p:inputText styleClass="inputText" id="adresse" value="#{clientController.selected.adresse}" title="#{bundle.CreateClientTitle_adresse}" />
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_codePostale}" for="codePostale" />
+                                            <p:inputText styleClass="inputText" id="codePostale" value="#{clientController.selected.codePostale}" title="#{bundle.CreateClientTitle_codePostale}" />
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_ville}" for="ville" />
+                                            <p:inputText styleClass="inputText" id="ville" value="#{clientController.selected.ville}" title="#{bundle.CreateClientTitle_ville}" />
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_telephone}" for="telephone" />
+                                            <p:inputText styleClass="inputText" id="telephone" value="#{clientController.selected.telephone}" title="#{bundle.CreateClientTitle_telephone}" />
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_fax}" for="fax" />
+                                            <p:inputText styleClass="inputText" id="fax" value="#{clientController.selected.fax}" title="#{bundle.CreateClientTitle_fax}" />
+                                            <p:outputLabel styleClass="outputLabel" value="#{bundle.CreateClientLabel_email}" for="email" />
+                                            <p:inputText styleClass="inputText" id="email" value="#{clientController.selected.email}" title="#{bundle.CreateClientTitle_email}" />
+
+                                        </p:panelGrid>
+                                        <p:commandButton styleClass="buttonSave" actionListener="#{clientController.update()}" value="#{bundle.Save}" update="display,:growl"/>
+                                        <p:button id="returnButton" icon=" icon-left-dir" value="Annuler" outcome="List.xhtml"
+                                             
+                                  ></p:button>
+                                    </h:panelGroup>
+                                </h:form>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

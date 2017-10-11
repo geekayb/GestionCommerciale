@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet name="css/jsfcrud.css"/>
+    </h:head>
+
+
+
+
+
+    <h:body style="background-image: url('im.png')">
+
+        <p:growl id="growl" life="3000" />
+        <div class="ui-grid ui-grid-responsive">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-12" style="border: 2px solid gray;margin: auto; margin-top: 5%; width: 40%; height: 40%;background-color: #e2e3e4">
+                    <p:panel header="Inscription" style="width: 360px; margin: auto; margin-top: 10%; box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                        <h:form id="form">
+                            
+                            <div>
+                                <h:panelGrid id="loginPanel" columns="2">
+
+                                    <h:outputText value="Nom Societé:" />
+
+                                    <p:inputText id="raisonSociale" value="#{societeController.raisonsociale}"></p:inputText>
+
+                                    <p:spacer></p:spacer>
+
+                                    <!--                <p:message for="username" ></p:message>-->
+
+
+                                    <h:outputText value="Email" />
+
+                                    <p:inputText id="email" value="#{societeController.email}" ></p:inputText>
+
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>   
+
+
+
+
+
+
+
+                                    <h:outputText value="Télephone:" />
+
+                                    <p:inputText id="telephone" value="#{societeController.telephone}"  ></p:inputText>
+
+                                    <!--                <p:spacer></p:spacer>-->
+
+                                    <!--                <p:message for="password"></p:message>-->
+
+                                    <p:spacer></p:spacer>
+
+
+                                    <p:commandButton  value="Créer mon compte" style="margin-left: 50%; width: max-content" actionListener="#{societeController.inscription()}" icon="ui-icon-check" update="dialog,:growl"></p:commandButton>
+                                    <p:dialog id="dialog" header="Information" widgetVar="dlg1" minHeight="40" rendered="#{societeController.getBoolean()==true}" >
+                                        <h:outputText value="Resistance to PrimeFaces is futile!" />
+                                    </p:dialog>
+
+
+                                </h:panelGrid>
+                            </div>
+
+                        </h:form>
+
+                    </p:panel>
+                    <p style="padding-left: 3%; padding-right: 3%">NB: S'il vou plaît il vous faut entrer une adresse mail valide, car vous recevrez un mail qui contient votre mot de passe </p>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </h:body>
+</html>

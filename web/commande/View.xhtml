@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+    
+        <p:dialog width="55%" height="100%"  minimizable="true" closable="true"  dynamic="true" position="center"  id="CommandeViewDlg" widgetVar="CommandeViewDialog" modal="true" resizable="true"  appendTo="@(body)" style="background-color: white" header="Aperçu de la commande N° #0#{commandeController.selected.dateCommande.month+1}#{commandeController.selected.dateCommande.year+1900}/#{commandeController.selected.id}">
+          
+            <h:form id="CommandeViewForm" style="background-color: white">
+                <h:panelGroup id="display">
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12" style="padding: 10px">
+                                 <u style="color: #4582b6"><h1 style="margin-left: 1%;color: #4582b6"> <h:outputText value="Commande N° "/>
+                                    <h:outputText   id="commande" value="#0#{commandeController.selected.dateCommande.month+1}#{commandeController.selected.dateCommande.year+1900}/#{commandeController.selected.id}" />
+                                </h1> 
+                                 </u>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Société:  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.raisonSociale}"/>
+
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Adresse:  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.adresse}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Tél  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.telephone}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Email:  "/>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.email}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.siteWeb}"/>
+                                <hr></hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row" style="background-color: #559bd7; margin-top: 2%;margin-bottom: 2%;padding: 10px">
+                            <div class="ui-grid-col-12">
+                                <u style="color:white"><h2><h:outputText value="Fournisseur:  "/>
+                                    <h:outputText   style="color: white; font-weight: bold;" id="fournisseurRc" value="#{commandeController.selected.fournisseur.nom}" />
+                                    <h:outputText style="margin-left: 40%" value="Montant total TTC Du: "/>
+                                    <h:outputText   id="montantdu" style="color : red" value="#{commandeController.selected.montantDu} #{commandeController.selected.devise} " />      
+
+                                    </h2></u><br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Adresse:  "/>
+                                <h:outputText  style="font-size: 15px; color: white;" id="fournisseurAd" value="#{commandeController.selected.fournisseur.adresse}" />
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Tel  "/>
+                                <h:outputText  style="font-size: 15px; color: white;" id="fournisseurTel" value="#{commandeController.selected.fournisseur.telephone}"/>
+                                <br></br>
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Email:  " />
+                                <h:outputText style="font-size: 15px; color: white;"  id="fournisseurEmail" value="#{commandeController.selected.fournisseur.email}" />
+                                <br></br>
+                                
+                                <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Ville  " rendered="#{commandeController.selected.fournisseur.ville!=commandeController.etat}"/>
+                                <h:outputText  style="font-size: 15px; color: white;" id="fournisseurVille" value="#{commandeController.selected.fournisseur.ville}" rendered="#{commandeController.selected.fournisseur.ville!=commandeController.etat}"/>      
+                                <br></br>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12" style="margin:2%">
+                                <p:dataTable id="datalist" value="#{commandeController.findCommandeItemsByCommande()}" var="item"
+
+
+                                             rowKey="#{item.id}"
+
+
+                                             >
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListCommandeItemTitle_produit}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.produit.libelle}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Prix unitaire"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.prixDevise}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListCommandeItemTitle_quantite}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.quantite}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Taux TVA"/>
+                                        </f:facet>
+                                        <h:outputText value="#{commandeController.taxToString(item.tax)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListCommandeItemTitle_remise}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.remise}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListCommandeItemTitle_sousTotalHT}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.sousTotalHT}"/>
+                                    </p:column>
+
+                                    <f:facet name="footer">
+                                    </f:facet>
+                                </p:dataTable>   
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr></hr>
+
+                    <div class="ui-grid-row" style="margin-left: 60%; font-size: 20px">
+                        <div class="ui-grid-col-12">
+                              <p:outputPanel style="margin-left: 8%">
+                                <h:panelGrid columns="2" cellpadding="5" style="width: 100%">
+                            <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Prix HT d'article" for="sousTotal" />
+                            <p:outputLabel id="sousTotal" style="font-weight: bold" value="#{commandeController.selected.sousTotal}#{commandeController.selected.devise}" title="#{bundle.CreateCommandeTitle_sousTotal}" />
+                           
+                            <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="#{bundle.CreateCommandeLabel_remise}" for="remise" />
+                            <p:outputLabel id="remise" style="font-weight: bold" value="#{commandeController.selected.remise}#{commandeController.selected.devise}" title="#{bundle.CreateCommandeTitle_remise}" >
+                            </p:outputLabel>   
+                        
+                            <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Nouveau total HT: " for="nouveauSousTotal"  />
+                            <p:outputLabel style="color: red; font-weight: bold" id="nouveauSousTotal" value="#{commandeController.selected.nouveauSousTotal}#{commandeController.selected.devise}" title="#{bundle.CreateCommandeTitle_nouveauSousTotal}" />
+                          
+                             <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Total TVA" for="totalTax" />
+                            <p:outputLabel id="totalTax" style="font-weight: bold" value="#{commandeController.selected.totalTax}#{commandeController.selected.devise}" title="#{bundle.CreateCommandeTitle_totalTax}" />
+                       
+                            
+                            <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="Total TTC" for="montantDu" />
+                            <p:outputLabel style="color: red;font-weight: bold" id="montantDu" value="#{commandeController.selected.montantDu}#{commandeController.selected.devise}" title="#{bundle.CreateCommandeTitle_montantDu}" />
+                                </h:panelGrid>
+                              </p:outputPanel>
+                        </div>
+                    </div>
+                     <hr></hr>
+                          <br></br>
+                    <h:panelGrid columns="2"  style="width: 70%;margin-left: 2%">
+                        <p:outputLabel style="font-size: 15px; color: orange; font-weight: bold;" for="condition" value="Condition de la commande"  />
+
+                        <p:outputLabel style="font-size: 15px; color: #428bca; font-weight: bold;" id= "condition"  value="#{commandeController.selected.conditionCommande}"  />
+                         </h:panelGrid>
+                        <br></br>
+                    <p:commandButton value="#{bundle.Close}" onclick="CommandeViewDialog.hide()" style="margin-bottom: 2%; margin-left: 2%"/>
+                </h:panelGroup>
+            </h:form>
+           
+        </p:dialog>
+    </ui:composition>
+</html>

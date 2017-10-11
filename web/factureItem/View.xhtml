@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="FactureItemViewDlg" widgetVar="FactureItemViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewFactureItemTitle}">
+            <h:form id="FactureItemViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{factureItemController.selected != null}">
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_facture}"/>
+                        <h:outputText value="#{factureItemController.selected.facture}" title="#{bundle.ViewFactureItemTitle_facture}"/>
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_produit}"/>
+                        <h:outputText value="#{factureItemController.selected.produit}" title="#{bundle.ViewFactureItemTitle_produit}"/>
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_quantite}"/>
+                        <h:outputText value="#{factureItemController.selected.quantite}" title="#{bundle.ViewFactureItemTitle_quantite}"/>
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_tax}"/>
+                        <h:outputText value="#{factureItemController.selected.tax}" title="#{bundle.ViewFactureItemTitle_tax}"/>
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_sousTotalHT}"/>
+                        <h:outputText value="#{factureItemController.selected.sousTotalHT}" title="#{bundle.ViewFactureItemTitle_sousTotalHT}"/>
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_remise}"/>
+                        <h:outputText value="#{factureItemController.selected.remise}" title="#{bundle.ViewFactureItemTitle_remise}"/>
+                        <h:outputText value="#{bundle.ViewFactureItemLabel_id}"/>
+                        <h:outputText value="#{factureItemController.selected.id}" title="#{bundle.ViewFactureItemTitle_id}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="FactureItemViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

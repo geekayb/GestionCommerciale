@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <h:outputStylesheet library="default" name="css/myStyle.css" />
+        <ui:define name="body">
+            <div class="ui-grid ui-grid-responsive" style="background-image: url('/Gestion_commerciale/im.png');height: 100%">
+                <div class="ui-grid ui-grid-responsive" style="background-color: white;width: 90%; margin: auto; border: 2px solid gray; border-radius: 10px">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-8"  >
+                            <h:form id="LivraisonEditForm"  >
+                                <p:commandButton style="margin-left: 3%" icon="ui-icon-save" actionListener="#{livraisonController.update()}" value="Sauvegarder" update=":growl"/>
+                                <p:button icon="ui-icon-cancel" outcome="List.xhtml" value="Annuler"/>
+                              
+                               
+
+                                <p:commandButton  value="Supprimer" action="#{livraisonController.destroy()}" ajax="false" icon="ui-icon-trash" />
+
+                                <p:panel header="les informations du livraison" style="margin-top: 3%;width: 65%; margin-left: 3%; display: inline-block" >
+
+                                    <h:panelGroup id="display">
+
+
+                                        <p:panelGrid columns="4" rendered="#{livraisonController.selected != null}" style="width: 100% ">
+                                            <p:outputLabel value="N° Livraison" for="id" />
+                                            <p:inputText style="width: 200px"  disabled="true" id="id" value="#0#{livraisonController.selected.dateLivraison.month+1}#{livraisonController.selected.dateLivraison.year+1900}/#{livraisonController.selected.id}" title="#{bundle.EditLivraisonTitle_id}" />
+                                            <p:outputLabel value="#{bundle.EditLivraisonLabel_client}" for="client" />
+                                            <p:selectOneMenu style="width: 250px"  id="client" value="#{livraisonController.selected.client}" >
+                                                <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                                <f:selectItems value="#{clientController.list}"
+                                                               var="clientItem"
+                                                               itemValue="#{clientItem}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="#{bundle.EditLivraisonLabel_dateLivraison}" for="dateLivraison" />
+                                            <p:calendar style="width: 300px"  id="dateLivraison" pattern="MM/dd/yyyy" value="#{livraisonController.selected.dateLivraison}" title="#{bundle.EditLivraisonTitle_dateLivraison}"  showOn="button"/>
+                                            <p:outputLabel value="Condition de livraison" for="conditionLivraison" />
+                                            <p:inputTextarea id= "conditionLivraison" cols="40" rows="2" value="#{livraisonController.selected.conditionLivraison}"  />
+                                            <p:outputLabel value="#{bundle.EditLivraisonLabel_dateEcheance}" for="dateEcheance" />
+                                            <p:calendar style="width: 300px"  id="dateEcheance" pattern="MM/dd/yyyy" value="#{livraisonController.selected.dateEcheance}" title="#{bundle.EditLivraisonTitle_dateEcheance}"  showOn="button"/>
+
+
+                                            <p:outputLabel value="Sujet" for="sujet" />
+                                            <p:inputTextarea  cols="40" rows="2" id="sujet" value="#{livraisonController.selected.sujet}" />
+
+                                            <p:outputLabel value="Devise" for="devise" />
+                                            <p:selectOneMenu disabled="true" style="width: 200px" id="devise" value="#{livraisonController.selected.devise}" >
+                                                <f:selectItem  itemValue="$" itemLabel="Dollar américain (USD)" />
+                                                <f:selectItem  itemValue="€" itemLabel="Euro (EUR)" />
+                                                <f:selectItem  itemValue="Dhs" itemLabel="Dirham marocain (DH)" />                                                                     
+                                            </p:selectOneMenu>
+                                        </p:panelGrid>
+
+                                    </h:panelGroup>
+
+
+                                </p:panel>
+                                <div class="ui-grid-col-6" style="border: 8px double #{livraisonController.getColor(livraisonController.selected.status)};height: 15%;width: 20%; text-align: center;
+                                     background-color: white; display: inline-block;  color: #{livraisonController.getColor(livraisonController.selected.status)};
+                                     position: absolute; margin-left:2%;margin-top: 1%; font-size: 55px; 
+                                     text-align: center">#{livraisonController.selected.status}
+                                    <p:panelGrid style="margin-top: 14%;width: 110%" columns="2" rendered="#{livraisonController.selected != null}" >
+                                        <p:outputLabel value="changer l'état du livraison" for="status" />
+                                        <p:selectOneMenu style="width: 150px" id="status" value="#{livraisonController.selected.status}">
+                                            <f:selectItem id="nulle" itemValue="tout" itemLabel="Choisissez l'option" />
+                                            <f:selectItem  itemValue="Brouillon" itemLabel="Brouillon" />
+                                            <f:selectItem  itemValue="Envoyé" itemLabel="Envoyé" />
+                                            <f:selectItem  itemValue="Consulté" itemLabel="Consulté" />
+                                            <f:selectItem  itemValue="Approuvé" itemLabel="Approuvé" />
+                                            <f:selectItem  itemValue="Rejeté" itemLabel="Rejeté" />
+                                            <f:selectItem  itemValue="Annulé" itemLabel="Annulé" />
+                                        </p:selectOneMenu>
+                                    </p:panelGrid>
+                                </div>
+                            </h:form>
+                        </div>
+
+
+                        <div class="ui-grid-col-6" >
+                            <h:form id="LivraisonItemListForm">
+                                <p:panel header="Lignes de livraison" style="width: 65%; margin-left: 3%; margin-top: 1%" >
+
+
+                                    <p:dataTable id="datalist" value="#{livraisonController.findLivraisonItemsByLivraison()}" var="item"
+                                                 selectionMode="single" selection="#{livraisonItemController.selected}"                                                 
+                                                 rowKey="#{item.id}"                                                 
+                                                 >
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListLivraisonItemTitle_produit}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.produit.libelle}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Prix unitaire"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.prixDevise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListLivraisonItemTitle_quantite}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.quantite}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="TVA"/>
+                                            </f:facet>
+                                            <h:outputText value="#{livraisonController.taxToString(item.tax)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListLivraisonItemTitle_remise}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.remise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListLivraisonItemTitle_sousTotalHT}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.sousTotalHT}"/>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{livraisonItemController.prepareCreate}" update=":LivraisonItemCreateForm" oncomplete="PF('LivraisonItemCreateDialog').show()"/>
+                                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":LivraisonItemEditForm" oncomplete="PF('LivraisonItemEditDialog').show()" disabled="#{empty livraisonItemController.selected}"/>
+                                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{livraisonController.deleteLivraisonItem(livraisonItemController.selected)}" update=":growl,:LivraisonItemListForm:datalist,:form:sousTotal,:form:totalTax,:form:nouveauSousTotal,:form:montantDu,:form:remise" disabled="#{empty livraisonItemController.selected}"/>
+                                        </f:facet>
+                                    </p:dataTable> 
+                                </p:panel>
+                            </h:form>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-grid-row" style="margin-top: -15%; margin-left: 70%">
+                        <div class="ui-grid-col-6">
+                            <div class="ui-grid-row">
+                                <h:form id="form">
+                                    <p:panelGrid columns="2" style="width: 90% ;text-align: left">
+
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_sousTotal}" for="sousTotal" />
+                                        <p:inputText style=" font-weight: bold;color:black" id="sousTotal" value="#{livraisonController.selected.sousTotal}#{livraisonController.selected.devise}" title="#{bundle.CreateFactureTitle_sousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_remise}" for="remise" />
+
+                                        <p:inputText style=" font-weight: bold;color:brown" id="remise" value="#{livraisonController.selected.remise}" title="#{bundle.CreateFactureTitle_remise}" >
+                                            <p:ajax listener="#{livraisonController.calculerNouveauSousTotal()}" process="remise" event="keyup" update="montantDu, nouveauSousTotal"></p:ajax>
+                                        </p:inputText>   
+
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_nouveauSousTotal}" for="nouveauSousTotal" />
+                                        <p:inputText style=" font-weight: bold;color:black" id="nouveauSousTotal" value="#{livraisonController.selected.nouveauSousTotal}#{livraisonController.selected.devise}" title="#{bundle.CreateFactureTitle_nouveauSousTotal}" disabled="true" readonly="true"/>
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_totalTax}" for="totalTax" />
+                                        <p:inputText style=" font-weight: bold;color:red" id="totalTax" value="#{livraisonController.selected.totalTax}#{livraisonController.selected.devise}" title="#{bundle.CreateFactureTitle_totalTax}" disabled="true" readonly="true" />
+
+                                        <p:outputLabel style="color: orange; font-weight: bold" value="#{bundle.CreateFactureLabel_montantDu}" for="montantDu" />
+                                        <p:inputText style=" font-weight: bold;color:green" id="montantDu" value="#{livraisonController.selected.montantDu}#{livraisonController.selected.devise}" title="#{bundle.CreateFactureTitle_montantDu}" disabled="true" readonly="true"/>
+
+
+                                    </p:panelGrid>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-6" style="width: 80%; margin: auto;margin-bottom: 5%;margin-top: 3%">
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <ui:include src="/livraisonItem/Create.xhtml"/>
+            <ui:include src="/livraisonItem/Edit.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

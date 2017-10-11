@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog width="55%" height="100%"  minimizable="true" closable="true"  dynamic="true" position="center"  id="FactureViewDlg" widgetVar="FactureViewDialog" modal="true"   appendTo="@(body)"  header="Aperçu de la facture N° #0#{factureController.selected.dateFacture.month+1}#{factureController.selected.dateFacture.year+1900}/#{factureController.selected.id}">
+        
+                <h:form id="FactureViewForm" style="background-color: white">
+
+                    <h:panelGroup id="display">
+                        <div class="ui-grid ui-grid-responsive">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12" style="padding: 10px">
+                                    <u style="color: #4582b6"><h1 style="margin-left: 1%;color: #4582b6"> <h:outputText value="Facture N° "/>
+                                            <h:outputText   id="facture" value="#0#{factureController.selected.dateFacture.month+1}#{factureController.selected.dateFacture.year+1900}/#{factureController.selected.id}" />
+                                        </h1> </u>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Société:  "/>
+                                    <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.raisonSociale}"/>
+                                    <div class="ui-grid-col-6" style="padding: 7px;border: 4px solid #{factureController.getColor(factureController.selected.etat)}; 
+                                         background-color: white; width: 32%; height: max-content; color: #{factureController.getColor(factureController.selected.etat)};
+                                         position: absolute; left:63%; top:5%; font-size: 300%; border-radius: 10px;
+                                         text-align: center">#{factureController.selected.etat}</div>
+                                    <br></br>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Adresse:  "/>
+                                    <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.adresse}"/>
+                                    <br></br>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Tél  "/>
+                                    <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.telephone}"/>
+                                    <br></br>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Email:  "/>
+                                    <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.email}"/>
+                                    <br></br>
+                                    <h:outputText style="font-size: 15px;color: #428bca;" value="#{utilisateurController.connectedUser.societe.siteWeb}"/>
+                                    <hr></hr>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-grid ui-grid-responsive">
+                            <div class="ui-grid-row" style="background-color: #559bd7; margin-top: 1%;margin-bottom: 2%;padding: 10px">
+                                <div class="ui-grid-col-12">
+                                    <u style="color:white"><h2><h:outputText style="color: white; font-weight: bold;" value="Client:  "/>
+                                            <h:outputText  style="color: white; font-weight: bold;" id="clientRc" value="#{factureController.selected.client.raisonSociale}" />
+                                            <h:outputText style="margin-left: 40%" value="Montant total TTC Du: "/>
+                                            <h:outputText   id="montantdu" style="color : red" value="#{factureController.selected.montantDu} #{factureController.selected.devise}" />      
+
+                                        </h2></u><br></br>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Adresse:  "/>
+                                    <h:outputText   style="font-size: 15px; color: white;" id="clientAd" value="#{factureController.selected.client.adresse}" />
+                                    <br></br>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Tel  "/>
+                                    <h:outputText   style="font-size: 15px; color: white;" id="clientTel" value="#{factureController.selected.client.telephone}"/>
+                                    <br></br>
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Email:  " />
+                                    <h:outputText   style="font-size: 15px; color: white;" id="clientEmail" value="#{factureController.selected.client.email}" />
+                                    <br></br>
+
+                                    <h:outputText style="font-size: 15px; color: orange; font-weight: bold;" value="Ville  " rendered="#{factureController.selected.client.ville!=factureController.etat}"/>
+                                    <h:outputText   style="font-size: 15px; color: white;" id="clientVille" value="#{factureController.selected.client.ville}" rendered="#{factureController.selected.client.ville!=factureController.etat}"/>      
+                                    <br></br>
+                                    <br></br>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr></hr>
+                        <div class="ui-grid ui-grid-responsive">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12" style="margin:2%">
+                                    <p:dataTable id="datalist" value="#{factureController.findFactureItemsByFacture()}" var="item"
+
+
+                                                 rowKey="#{item.id}"
+
+
+                                                 >
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_produit}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.produit.libelle}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Prix unitaire"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.prixDevise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_quantite}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.quantite}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Taux TVA"/>
+                                            </f:facet>
+                                            <h:outputText value="#{factureController.taxToString(item.tax)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_remise}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.remise}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListFactureItemTitle_sousTotalHT}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.sousTotalHT}"/>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                        </f:facet>
+                                    </p:dataTable>   
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr></hr>
+
+                        <div class="ui-grid-row" style="margin-left: 55%; font-size: 25px">
+                            <div class="ui-grid-col-12">
+                                <p:outputPanel style="margin-left: 8%">
+
+
+
+                                    <h:panelGrid columns="2" cellpadding="8" style="width: 100%">
+                                        <p:outputLabel style="font-weight: bold;font-size: 20px;color: #428bca;" value="#{bundle.CreateFactureLabel_sousTotal}" for="sousTotal" />
+                                        <p:outputLabel id="sousTotal" style="font-weight: bold" value="#{factureController.selected.sousTotal}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_sousTotal}" />
+                                     
+                                        <p:outputLabel style="font-weight: bold;font-size: 15px;color: #428bca;" value="#{bundle.CreateFactureLabel_totalTax}" for="totalTax" />
+                                        <p:outputLabel id="totalTax" style="font-weight: bold" value="#{factureController.selected.totalTax}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_totalTax}" />
+                                      
+
+
+                                        <p:outputLabel style="font-weight: bold;font-size: 15px;color: #428bca;" value="Prix TTC : " for="nouveauSousTotal"  />
+                                        <p:outputLabel style="color: red;font-weight: bold" id="nouveauSousTotal" value="#{factureController.selected.nouveauSousTotal}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_nouveauSousTotal}" />
+                                        
+                                        <p:outputLabel style="font-weight: bold;font-size: 15px;color: #428bca;" value="#{bundle.CreateFactureLabel_remise}" for="remise" />
+                                        <p:outputLabel id="remise"  style="font-weight: bold" value="#{factureController.selected.remise} #{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_remise}" >
+                                        </p:outputLabel>  
+                                       
+
+                                        <p:outputLabel style="font-weight: bold;font-size: 15px;color: #428bca;" value="#{bundle.CreateFactureLabel_totalAvecRemise}" for="totalAvecRemise" />
+                                        <p:outputLabel id="totalAvecRemise" style="font-weight: bold" value="#{factureController.selected.totalAvecRemise}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_totalAvecRemise}" />
+                                       
+                                        <p:outputLabel style="font-weight: bold;font-size: 15px;color: #428bca;" value="#{bundle.CreateFactureLabel_montantPaye}" for="montantPaye" />
+                                        <p:outputLabel style="color: green;font-weight: bold" id="montantPaye" value="#{factureController.selected.montantPaye}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_montantPaye}" />
+                                       
+                                        <p:outputLabel style="font-weight: bold;font-size: 15px;color: #428bca;" value="#{bundle.CreateFactureLabel_montantDu}" for="montantDu" />
+                                        <p:outputLabel style="font-weight: bold;color: red;" id="montantDu" value="#{factureController.selected.montantDu}#{factureController.selected.devise}" title="#{bundle.CreateFactureTitle_montantDu}" />
+                                    </h:panelGrid>
+                                </p:outputPanel>
+                            </div>
+
+                        </div>
+                        <hr></hr>
+                          <br></br>
+                           
+                         <h:panelGrid columns="2"  style="width: 70%;margin-left: 2%">
+                        <p:outputLabel style="font-size: 15px; color: orange; font-weight: bold;" for="condition" value="Condition de facture:"  />
+
+                        <p:outputLabel style="font-size: 15px; color: #428bca; font-weight: bold;" id= "condition"  value="#{factureController.selected.conditionFacture}"  />
+                         </h:panelGrid>
+                        <br></br>
+                        <p:commandButton value="#{bundle.Close}" onclick="FactureViewDialog.hide()"  />
+                    
+                    </h:panelGroup>
+
+                </h:form>
+      
+        </p:dialog>
+
+    </ui:composition>
+</html>
